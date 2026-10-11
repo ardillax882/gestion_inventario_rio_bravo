@@ -55,6 +55,8 @@ namespace gestion_inventario_rio_bravo.Views
             //
             this.dgvMovimientos.AllowUserToAddRows = false;
             this.dgvMovimientos.AllowUserToDeleteRows = false;
+            this.dgvMovimientos.AllowUserToResizeColumns = false;
+            this.dgvMovimientos.AllowUserToResizeRows = false;
             this.dgvMovimientos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvMovimientos.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvMovimientos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;

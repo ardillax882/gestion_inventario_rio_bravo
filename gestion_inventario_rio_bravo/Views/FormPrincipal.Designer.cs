@@ -394,6 +394,8 @@ namespace gestion_inventario_rio_bravo.Views
             //
             this.dgvStockBajo.AllowUserToAddRows = false;
             this.dgvStockBajo.AllowUserToDeleteRows = false;
+            this.dgvStockBajo.AllowUserToResizeColumns = false;
+            this.dgvStockBajo.AllowUserToResizeRows = false;
             this.dgvStockBajo.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvStockBajo.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvStockBajo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -467,6 +469,8 @@ namespace gestion_inventario_rio_bravo.Views
             //
             this.dgvObras.AllowUserToAddRows = false;
             this.dgvObras.AllowUserToDeleteRows = false;
+            this.dgvObras.AllowUserToResizeColumns = false;
+            this.dgvObras.AllowUserToResizeRows = false;
             this.dgvObras.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvObras.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvObras.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -521,6 +525,8 @@ namespace gestion_inventario_rio_bravo.Views
             //
             this.dgvSolicitudes.AllowUserToAddRows = false;
             this.dgvSolicitudes.AllowUserToDeleteRows = false;
+            this.dgvSolicitudes.AllowUserToResizeColumns = false;
+            this.dgvSolicitudes.AllowUserToResizeRows = false;
             this.dgvSolicitudes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvSolicitudes.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvSolicitudes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;

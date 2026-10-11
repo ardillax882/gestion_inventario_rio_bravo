@@ -14,7 +14,7 @@ Lee esto primero si eres una IA que retoma el proyecto:
 3. **Las 9 planillas Excel de `Docs/`** son registros de *salida de materiales* de una obra cada una. Se reemplazan por una vista del sistema con formulario estandarizado e imprimible (§8).
 4. **Simplicidad ante todo:** el cliente pidió un sistema simple. 3 roles, 1 bodega, sin abstracciones innecesarias.
 5. Lo marcado **[PENDIENTE]** no está decidido: no lo inventes, pregunta o deja el punto configurable.
-6. **Estado de implementación (2026-10-11):** hecho = login/roles/usuarios, conexión por `.env`, Inicio (resumen), catálogo y stock (RF-04, RF-06, RF-07), ajustes y kardex (RF-24, RF-25), obras (RF-12..RF-14), solicitudes, aprobación, despachos parciales e impresiones 1 y 2 (RF-15..RF-19). Pendiente = categorías editables (RF-05), proveedores y compras (RF-08..RF-11), ventas (RF-21..RF-23), reportes (RF-26), carga del catálogo maestro (§8.4), RF-20.
+6. **Estado de implementación (2026-10-11):** hecho = login/roles/usuarios, conexión por `.env`, Inicio (resumen), catálogo y stock (RF-04, RF-06, RF-07), ajustes y kardex (RF-24, RF-25), obras (RF-12..RF-14), solicitudes, aprobación, despachos parciales e impresiones 1 y 2 (RF-15..RF-19). Pendiente = categorías editables (RF-05), proveedores y compras (RF-08..RF-11), ventas (RF-21..RF-23), reportes (RF-26), carga del catálogo maestro (§8.4: propuesta en `CATALOGO_MAESTRO.md`, esperando revisión), RF-20.
 
 ### 0.1 Mapa de pantallas (dónde está cada cosa)
 
@@ -160,7 +160,7 @@ El cliente pidió simplicidad: **3 roles**. Se eliminan *Administrador* del diag
     - El `.env` se busca junto al `.exe` y, si no está, hasta 3 carpetas más arriba (en desarrollo basta con dejarlo en la carpeta del proyecto). Si falta, está incompleto o la clave es rechazada, la app muestra el motivo y se cierra.
     - **Instalación en un PC:** copiar la carpeta del programa y el `.env` junto a `gestion_inventario_rio_bravo.exe`. Si la clave cambia en Supabase, se actualiza el `.env` y se vuelve a repartir.
     - Riesgo aceptado: el `.env` guarda la clave en texto plano; por eso usa `app_riobravo` (permisos mínimos) y no `postgres`.
-    - **Desarrollo con Supabase local (Docker):** `supabase/config.toml` carga `Database/schema.sql` y `supabase/seed.sql` (clave local de `app_riobravo`). Desde la raíz del repo: `npx supabase@2.117.0 start` (detener: `stop`; BD desde cero: `db reset`; Studio en http://127.0.0.1:54323). En Debug la app prefiere `.env.local` (copia de `.env.local.example`) sobre `.env`; en Release usa solo `.env`.
+    - **Desarrollo con Supabase local (Docker):** `supabase/config.toml` carga `Database/schema.sql` y `supabase/seed.sql` (clave local de `app_riobravo`). Desde la raíz del repo: `npx supabase@2.117.0 start` (detener: `stop`; BD desde cero: `db reset`; Studio en http://127.0.0.1:54323). La app lee solo `.env`: para usar la base local o producción se cambian sus valores (plantillas `.env.local.example` y `.env.example`); el código no distingue entornos.
     - Los roles `anon`/`authenticated` de la API REST de Supabase no tienen acceso a ninguna tabla; RLS está activo en todas.
 - **RNF-03 Integridad:** toda operación que cambia stock (recepción, despacho, venta, ajuste) se ejecuta en **una transacción**: movimiento + actualización de stock juntos o nada.
 - **RNF-04 Arquitectura simple en capas:** `Views/` (formularios, sin SQL) → `Services/` (reglas de negocio) → `Data/` (repositorios con SQL parametrizado) + `Models/` (clases de entidad). Nada más.
@@ -292,7 +292,7 @@ Las 9 planillas son el mismo formulario ("Salida de materiales") copiado y modif
 **Problemas a corregir**
 | Problema | Ejemplos | Estándar |
 |---|---|---|
-| 314 nombres distintos de material, con errores de tipeo | "Tornilllos 2"", "Waterprooff", "Kit istalacion wc", "adesivo ceramico", "Silicona alta teperatura", "Tornilos 1"" | Catálogo maestro con código único y nombre corregido (§8.4). |
+| 290 nombres distintos de material (270 sin contar mayúsculas, tildes y espacios), con errores de tipeo | "Tornilllos 2"", "Waterprooff", "Kit istalacion wc", "adesivo ceramico", "Silicona alta teperatura", "Tornilos 1"" | Catálogo maestro con código único y nombre corregido (§8.4). |
 | Unidad mezclada en la cantidad | "2 cajas", "1 kg", "25 Mts", "1 saco", "1 grande" | Cantidad numérica + unidad de medida del material. |
 | Cantidades no numéricas | "variable" (Pvc 20, Kit pozo), celdas vacías | Cantidad obligatoria > 0; si es "variable", se solicita al despachar. |
 | Unidad dentro del nombre | "Sika (litros)", "Puntas 2" (kg)", "Polietileno (rollo)" | Unidad en su campo; nombre limpio. |
@@ -376,7 +376,7 @@ Implementación sugerida: `PrintDocument` de WinForms o reporte RDLC; elegir lo 
 - **Código:** prefijo de 3 letras de la categoría por defecto + correlativo, ej. `RAD-001`, `MAD-014`, `VEN-003`.
 - **Nombre:** corregido ortográficamente, sin la unidad entre paréntesis, con medidas normalizadas (`Pino 1x4 3,2 m`, `Tornillo 2"`, `Zinc tipo teja 3,66 m`).
 - **Unidades permitidas:** `un`, `kg`, `m`, `m2`, `rollo`, `caja`, `saco`, `barra`, `plancha`, `litro`, `galón`, `tarro`, `tineta`, `juego`, `kit`.
-- **Carga inicial:** se construye una vez a partir de los 314 nombres de las planillas, deduplicados y corregidos, validados por el usuario antes de cargarlos a la BD. (Tarea siguiente; no está en este documento.)
+- **Carga inicial:** propuesta en [`CATALOGO_MAESTRO.md`](CATALOGO_MAESTRO.md) (231 materiales a partir de los nombres de las planillas, 40 puntos [REVISAR]). Se carga a la BD solo cuando el usuario la apruebe.
 
 ---
 

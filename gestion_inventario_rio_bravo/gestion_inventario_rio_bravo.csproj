@@ -209,6 +209,9 @@
     <Compile Include="Views\Mensajes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Views\FormObraEditar.resx">
+      <DependentUpon>FormObraEditar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\FormPrincipal.resx">
       <DependentUpon>FormPrincipal.cs</DependentUpon>
     </EmbeddedResource>

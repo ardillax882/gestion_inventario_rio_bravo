@@ -13,14 +13,25 @@
 
 BEGIN;
 
--- La tabla "Solicitud" del proyecto anterior choca con el nuevo nombre.
--- No se borra: se renombra a solicitud_legacy para conservar sus datos.
+-- Las tablas del proyecto anterior (modelo incorrecto, ver REQUERIMIENTOS.md §2) se ELIMINAN
+-- con sus datos, por decisión del responsable (2026-10-11). Se reconocen porque les falta una
+-- columna del modelo nuevo, así una tabla nueva nunca se borra al re-ejecutar el script.
+-- DROP TABLE también elimina sus secuencias e índices (ej. usuario_pkey), que chocarían con los nuevos.
 DO $$
+DECLARE
+    v_tabla TEXT; v_columna TEXT;
 BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.columns
-               WHERE table_schema = 'public' AND table_name = 'solicitud' AND column_name = 'articulo') THEN
-        ALTER TABLE solicitud RENAME TO solicitud_legacy;
-    END IF;
+    FOR v_tabla, v_columna IN VALUES
+        ('solicitud', 'id_obra'), ('usuario', 'password_hash'), ('material', 'nombre'),
+        ('obra', 'superficie_m2'), ('proveedor', 'activo'),
+        ('ordencompra', NULL), ('detalleorden', NULL), ('movimientoinventario', NULL)
+    LOOP
+        CONTINUE WHEN to_regclass('public.' || v_tabla) IS NULL;
+        CONTINUE WHEN v_columna IS NOT NULL AND EXISTS (
+            SELECT 1 FROM information_schema.columns
+             WHERE table_schema = 'public' AND table_name = v_tabla AND column_name = v_columna);
+        EXECUTE format('DROP TABLE public.%I CASCADE', v_tabla);
+    END LOOP;
 END $$;
 
 -- -----------------------------------------------------------------------------
@@ -228,7 +239,8 @@ CREATE TRIGGER trg_aplicar_movimiento
     FOR EACH ROW EXECUTE FUNCTION fn_aplicar_movimiento();
 
 -- Los movimientos no se editan ni borran (RN-09).
-CREATE FUNCTION fn_movimiento_inmutable() RETURNS trigger AS $$
+CREATE FUNCTION fn_movimiento_inmutable() RETURNS trigger
+    SET search_path = public AS $$
 BEGIN
     RAISE EXCEPTION 'Los movimientos de inventario no se modifican ni eliminan; registre un ajuste.';
 END $$ LANGUAGE plpgsql;
@@ -327,6 +339,10 @@ END $$;
 
 -- La vista se evalúa con los permisos y RLS de quien consulta, no del dueño.
 ALTER VIEW v_saldo_solicitud SET (security_invoker = true);
+
+-- Las funciones de trigger no se llaman directamente (los triggers se ejecutan igual sin EXECUTE).
+-- PostgreSQL da EXECUTE a PUBLIC por defecto: se quita para que la API de Supabase no las exponga.
+REVOKE EXECUTE ON FUNCTION fn_aplicar_movimiento(), fn_movimiento_inmutable() FROM PUBLIC;
 
 -- Supabase expone el esquema public por su API REST a los roles anon/authenticated.
 -- Este sistema no usa esa API: se les quita todo acceso, también a tablas futuras.
