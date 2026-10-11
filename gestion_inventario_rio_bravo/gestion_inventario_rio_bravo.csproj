@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -52,6 +52,8 @@
       <HintPath>..\packages\System.Collections.Immutable.6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
@@ -91,26 +93,124 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConexionBD.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Data\ConexionBD.cs" />
+    <Compile Include="Data\ConfiguracionEntorno.cs" />
+    <Compile Include="Views\FormAjuste.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Views\FormAjuste.Designer.cs">
+      <DependentUpon>FormAjuste.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormNuevaSolicitud.cs">
+    <Compile Include="Views\FormDespacho.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormNuevaSolicitud.Designer.cs">
-      <DependentUpon>FormNuevaSolicitud.cs</DependentUpon>
+    <Compile Include="Views\FormDespacho.Designer.cs">
+      <DependentUpon>FormDespacho.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\FormKardex.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormKardex.Designer.cs">
+      <DependentUpon>FormKardex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormMaterialEditar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormMaterialEditar.Designer.cs">
+      <DependentUpon>FormMaterialEditar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormMateriales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormMateriales.Designer.cs">
+      <DependentUpon>FormMateriales.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormObraEditar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormObraEditar.Designer.cs">
+      <DependentUpon>FormObraEditar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormObras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormObras.Designer.cs">
+      <DependentUpon>FormObras.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormSolicitud.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormSolicitud.Designer.cs">
+      <DependentUpon>FormSolicitud.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormSolicitudes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormSolicitudes.Designer.cs">
+      <DependentUpon>FormSolicitudes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormTexto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormTexto.Designer.cs">
+      <DependentUpon>FormTexto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormLogin.Designer.cs">
+      <DependentUpon>FormLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormPassword.Designer.cs">
+      <DependentUpon>FormPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormPrincipal.Designer.cs">
+      <DependentUpon>FormPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormUsuarioEditar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormUsuarioEditar.Designer.cs">
+      <DependentUpon>FormUsuarioEditar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormUsuarios.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormUsuarios.Designer.cs">
+      <DependentUpon>FormUsuarios.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\InventarioRepository.cs" />
+    <Compile Include="Data\MaterialRepository.cs" />
+    <Compile Include="Data\ObraRepository.cs" />
+    <Compile Include="Data\SolicitudRepository.cs" />
+    <Compile Include="Data\UsuarioRepository.cs" />
+    <Compile Include="Models\Inventario.cs" />
+    <Compile Include="Models\Obra.cs" />
+    <Compile Include="Models\Solicitud.cs" />
+    <Compile Include="Models\Usuario.cs" />
+    <Compile Include="Services\CatalogoService.cs" />
+    <Compile Include="Services\ObraService.cs" />
+    <Compile Include="Services\PasswordHasher.cs" />
+    <Compile Include="Services\Permisos.cs" />
+    <Compile Include="Services\Rut.cs" />
+    <Compile Include="Services\Sesion.cs" />
+    <Compile Include="Services\SolicitudService.cs" />
+    <Compile Include="Services\UsuarioService.cs" />
+    <Compile Include="Services\ValidacionException.cs" />
+    <Compile Include="Views\Impresiones.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Views\Mensajes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormNuevaSolicitud.resx">
-      <DependentUpon>FormNuevaSolicitud.cs</DependentUpon>
+    <EmbeddedResource Include="Views\FormPrincipal.resx">
+      <DependentUpon>FormPrincipal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -122,6 +222,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include=".env" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -135,6 +236,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include=".env.example" />
+    <None Include=".env.local.example" />
+    <None Include="Database\schema.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\add.png" />

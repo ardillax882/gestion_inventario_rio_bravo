@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Configuración local con claves (Data/ConfiguracionEntorno.cs). Solo se versiona .env.example
+.env
+.env.*
+!.env.example
+!.env.local.example
