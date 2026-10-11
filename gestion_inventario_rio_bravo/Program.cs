@@ -16,6 +16,9 @@ namespace gestion_inventario_rio_bravo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            // Red de seguridad: un error no previsto en una ventana se informa en vez de cerrar el programa.
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            Application.ThreadException += (s, e) => Mensajes.Error("Ocurrió un error inesperado.", e.Exception);
 
             if (!PrepararBaseDeDatos()) return;
 

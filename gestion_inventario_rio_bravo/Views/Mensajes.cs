@@ -21,5 +21,8 @@ namespace gestion_inventario_rio_bravo.Views
 
         public static void Info(string mensaje) =>
             MessageBox.Show(mensaje, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        public static bool Confirmar(string pregunta) =>
+            MessageBox.Show(pregunta, "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
     }
 }

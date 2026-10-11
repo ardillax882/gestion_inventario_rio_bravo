@@ -14,6 +14,23 @@ Lee esto primero si eres una IA que retoma el proyecto:
 3. **Las 9 planillas Excel de `Docs/`** son registros de *salida de materiales* de una obra cada una. Se reemplazan por una vista del sistema con formulario estandarizado e imprimible (§8).
 4. **Simplicidad ante todo:** el cliente pidió un sistema simple. 3 roles, 1 bodega, sin abstracciones innecesarias.
 5. Lo marcado **[PENDIENTE]** no está decidido: no lo inventes, pregunta o deja el punto configurable.
+6. **Estado de implementación (2026-10-11):** hecho = login/roles/usuarios, conexión por `.env`, Inicio (resumen), catálogo y stock (RF-04, RF-06, RF-07), ajustes y kardex (RF-24, RF-25), obras (RF-12..RF-14), solicitudes, aprobación, despachos parciales e impresiones 1 y 2 (RF-15..RF-19). Pendiente = categorías editables (RF-05), proveedores y compras (RF-08..RF-11), ventas (RF-21..RF-23), reportes (RF-26), carga del catálogo maestro (§8.4), RF-20.
+
+### 0.1 Mapa de pantallas (dónde está cada cosa)
+
+| Menú / acceso | Pantalla | Qué se hace ahí | Quién |
+|---|---|---|---|
+| Al iniciar sesión | `FormPrincipal` (Inicio) | Tarjetas: materiales bajo mínimo, obras en ejecución, solicitudes por aprobar y por despachar. Listas con doble clic para abrir. | Todos |
+| Inventario → Materiales y stock | `FormMateriales` | Buscar, ver stock (rojo = bajo mínimo), crear/editar material, ajustar stock, ver movimientos | Editar: Gerente, Jefe de Compras · Ajustar: Gerente, Bodeguero |
+| Inventario → Ajuste de inventario | `FormAjuste` | Entrada/salida con motivo (inventario inicial, conteo, merma, devolución) | Gerente, Bodeguero |
+| Materiales → Ver movimientos | `FormKardex` | Historial con saldo, documento y obra | Todos |
+| Obras → Lista de obras | `FormObras` / `FormObraEditar` | Crear/editar obra (encabezado de la planilla), costo despachado vs. presupuesto | Editar: Gerente |
+| Solicitudes → Nueva solicitud | `FormSolicitud` | **El formulario estandarizado** (§8.2): agregar materiales por sección, guardar, aprobar/rechazar, despachar, imprimir | Registrar: Gerente, Bodeguero · Aprobar: Gerente |
+| Solicitudes → Ver solicitudes | `FormSolicitudes` | Filtrar por obra y estado, abrir planilla | Todos |
+| Planilla → Nuevo despacho | `FormDespacho` | Cantidad entregada hoy por línea (≤ saldo y ≤ stock); descuenta stock e imprime comprobante | Gerente, Bodeguero |
+| Administración → Usuarios | `FormUsuarios` | Usuarios y roles | Gerente |
+
+Fechas de documentos: las envía la app en hora local del PC (`ConexionBD.AgregarAhora`), porque el servidor de Supabase está en UTC.
 
 ---
 

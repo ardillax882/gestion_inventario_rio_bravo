@@ -95,6 +95,66 @@
   <ItemGroup>
     <Compile Include="Data\ConexionBD.cs" />
     <Compile Include="Data\ConfiguracionEntorno.cs" />
+    <Compile Include="Views\FormAjuste.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormAjuste.Designer.cs">
+      <DependentUpon>FormAjuste.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormDespacho.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormDespacho.Designer.cs">
+      <DependentUpon>FormDespacho.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormKardex.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormKardex.Designer.cs">
+      <DependentUpon>FormKardex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormMaterialEditar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormMaterialEditar.Designer.cs">
+      <DependentUpon>FormMaterialEditar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormMateriales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormMateriales.Designer.cs">
+      <DependentUpon>FormMateriales.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormObraEditar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormObraEditar.Designer.cs">
+      <DependentUpon>FormObraEditar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormObras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormObras.Designer.cs">
+      <DependentUpon>FormObras.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormSolicitud.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormSolicitud.Designer.cs">
+      <DependentUpon>FormSolicitud.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormSolicitudes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormSolicitudes.Designer.cs">
+      <DependentUpon>FormSolicitudes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormTexto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormTexto.Designer.cs">
+      <DependentUpon>FormTexto.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FormLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,14 +185,27 @@
     <Compile Include="Views\FormUsuarios.Designer.cs">
       <DependentUpon>FormUsuarios.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\InventarioRepository.cs" />
+    <Compile Include="Data\MaterialRepository.cs" />
+    <Compile Include="Data\ObraRepository.cs" />
+    <Compile Include="Data\SolicitudRepository.cs" />
     <Compile Include="Data\UsuarioRepository.cs" />
+    <Compile Include="Models\Inventario.cs" />
+    <Compile Include="Models\Obra.cs" />
+    <Compile Include="Models\Solicitud.cs" />
     <Compile Include="Models\Usuario.cs" />
+    <Compile Include="Services\CatalogoService.cs" />
+    <Compile Include="Services\ObraService.cs" />
     <Compile Include="Services\PasswordHasher.cs" />
     <Compile Include="Services\Permisos.cs" />
     <Compile Include="Services\Rut.cs" />
     <Compile Include="Services\Sesion.cs" />
+    <Compile Include="Services\SolicitudService.cs" />
     <Compile Include="Services\UsuarioService.cs" />
     <Compile Include="Services\ValidacionException.cs" />
+    <Compile Include="Views\Impresiones.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Views\Mensajes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
