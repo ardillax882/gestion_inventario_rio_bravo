@@ -35,39 +35,31 @@ namespace gestion_inventario_rio_bravo
         }
 
         /// <summary>
-        /// Asegura la clave de conexión de este PC (la pide si falta o fue rechazada) y,
-        /// si la BD no tiene usuarios, crea el Gerente inicial. False = salir de la aplicación.
+        /// Comprueba la conexión configurada en el .env y, si la BD no tiene usuarios,
+        /// crea el Gerente inicial. False = salir de la aplicación.
         /// </summary>
         private static bool PrepararBaseDeDatos()
         {
-            string motivo = null;
-            while (true)
+            try
             {
-                if (ConfiguracionConexion.ObtenerPassword() == null)
-                    using (var f = new FormConexion(motivo))
-                        if (f.ShowDialog() != DialogResult.OK) return false;
-
-                try
-                {
-                    if (!UsuarioService.ExisteAlguno())
-                        using (var f = new FormUsuarioEditar(primerGerente: true))
-                            return f.ShowDialog() == DialogResult.OK;
-                    return true;
-                }
-                catch (Exception ex) when (ConexionBD.EsErrorDeAutenticacion(ex) && !ConfiguracionConexion.DesdeVariableEntorno)
-                {
-                    // La clave guardada ya no sirve (por ejemplo, se cambió): se borra y se vuelve a pedir.
-                    ConfiguracionConexion.Borrar();
-                    motivo = "La clave de conexión guardada en este PC ya no es válida.";
-                }
-                catch (Exception ex)
-                {
-                    Mensajes.Error(ConfiguracionConexion.DesdeVariableEntorno
-                        ? $"No se pudo conectar con la base de datos (clave tomada de la variable {ConfiguracionConexion.VariablePassword})."
-                        : "No se pudo conectar con la base de datos.", ex);
-                    return false;
-                }
+                if (!UsuarioService.ExisteAlguno())
+                    using (var f = new FormUsuarioEditar(primerGerente: true))
+                        return f.ShowDialog() == DialogResult.OK;
+                return true;
             }
+            catch (ConfiguracionException ex)
+            {
+                Mensajes.Advertencia(ex.Message);
+            }
+            catch (Exception ex) when (ConexionBD.EsErrorDeAutenticacion(ex))
+            {
+                Mensajes.Advertencia($"La base de datos rechazó el usuario o la clave del archivo:\n{ConfiguracionEntorno.RutaArchivo}");
+            }
+            catch (Exception ex)
+            {
+                Mensajes.Error("No se pudo conectar con la base de datos. Revise la conexión a internet y el archivo .env.", ex);
+            }
+            return false;
         }
     }
 }
