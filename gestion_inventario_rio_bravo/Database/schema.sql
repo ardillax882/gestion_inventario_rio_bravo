@@ -211,7 +211,10 @@ CREATE INDEX ix_det_desp_det ON detalle_despacho (id_detalle_solicitud);
 
 -- Actualiza el stock en la misma transacción que el movimiento (RN-05).
 -- Si el stock quedaría negativo, el CHECK de material aborta toda la operación (RN-04).
-CREATE FUNCTION fn_aplicar_movimiento() RETURNS trigger AS $$
+-- SECURITY DEFINER: el usuario de la app no tiene permiso para escribir stock_actual;
+-- solo esta función (dueña: postgres) puede hacerlo.
+CREATE FUNCTION fn_aplicar_movimiento() RETURNS trigger
+    SECURITY DEFINER SET search_path = public AS $$
 BEGIN
     UPDATE material
        SET stock_actual = stock_actual
@@ -268,5 +271,75 @@ INSERT INTO categoria (orden, nombre, prefijo) VALUES
     (14, 'Red de gas',             'RGA'),
     (15, 'Terminaciones',          'TER'),
     (16, 'Otros',                  'OTR');
+
+-- -----------------------------------------------------------------------------
+-- Seguridad (RNF-02)
+--
+-- La aplicación se conecta con el usuario limitado app_riobravo, nunca con postgres.
+-- Aquí se crea SIN contraseña (NOLOGIN). La contraseña se asigna aparte, a mano,
+-- en el SQL Editor de Supabase (no se guarda en git):
+--     ALTER ROLE app_riobravo WITH LOGIN PASSWORD 'una-clave-larga-y-aleatoria';
+-- -----------------------------------------------------------------------------
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'app_riobravo') THEN
+        CREATE ROLE app_riobravo NOLOGIN;
+    END IF;
+END $$;
+
+GRANT USAGE ON SCHEMA public TO app_riobravo;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO app_riobravo;
+
+-- Maestros y encabezados: se crean y editan (se desactivan con "activo"), no se borran.
+GRANT SELECT, INSERT, UPDATE ON usuario, proveedor, cliente, categoria, obra, orden_compra, solicitud, venta
+    TO app_riobravo;
+
+-- Líneas editables mientras el documento está en borrador.
+GRANT SELECT, INSERT, UPDATE, DELETE ON detalle_orden, detalle_solicitud TO app_riobravo;
+
+-- Despachos y líneas de venta son definitivos: solo se registran (una venta se anula con su estado).
+GRANT SELECT, INSERT ON despacho, detalle_despacho, detalle_venta TO app_riobravo;
+
+-- Material: la app nunca escribe stock_actual (lo hace solo el trigger, RN-05).
+GRANT SELECT ON material TO app_riobravo;
+GRANT INSERT (codigo, nombre, descripcion, unidad_medida, id_categoria, stock_minimo, precio_unitario, activo),
+      UPDATE (codigo, nombre, descripcion, unidad_medida, id_categoria, stock_minimo, precio_unitario, activo)
+    ON material TO app_riobravo;
+
+-- Kardex: solo inserción (RN-09).
+GRANT SELECT, INSERT ON movimiento_inventario TO app_riobravo;
+GRANT SELECT ON v_saldo_solicitud TO app_riobravo;
+
+-- Row Level Security activado en todas las tablas: solo app_riobravo tiene acceso
+-- (postgres, dueño de las tablas, y las funciones SECURITY DEFINER no se ven afectados).
+DO $$
+DECLARE t TEXT;
+BEGIN
+    FOREACH t IN ARRAY ARRAY['usuario', 'proveedor', 'cliente', 'categoria', 'material', 'obra',
+                             'orden_compra', 'detalle_orden', 'solicitud', 'detalle_solicitud',
+                             'despacho', 'detalle_despacho', 'venta', 'detalle_venta', 'movimiento_inventario']
+    LOOP
+        EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', t);
+        EXECUTE format('CREATE POLICY app_riobravo_acceso ON %I TO app_riobravo USING (true) WITH CHECK (true)', t);
+    END LOOP;
+END $$;
+
+-- La vista se evalúa con los permisos y RLS de quien consulta, no del dueño.
+ALTER VIEW v_saldo_solicitud SET (security_invoker = true);
+
+-- Supabase expone el esquema public por su API REST a los roles anon/authenticated.
+-- Este sistema no usa esa API: se les quita todo acceso, también a tablas futuras.
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
+        REVOKE ALL ON ALL TABLES    IN SCHEMA public FROM anon, authenticated;
+        REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM anon, authenticated;
+        REVOKE ALL ON ALL FUNCTIONS IN SCHEMA public FROM anon, authenticated;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON TABLES    FROM anon, authenticated;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON SEQUENCES FROM anon, authenticated;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON FUNCTIONS FROM anon, authenticated;
+    END IF;
+END $$;
 
 COMMIT;

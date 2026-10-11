@@ -11,10 +11,13 @@ namespace gestion_inventario_rio_bravo.Views
         public static void Error(string contexto, Exception ex)
         {
             if (ex is ValidacionException)
-                MessageBox.Show(ex.Message, "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Advertencia(ex.Message);
             else
                 MessageBox.Show(contexto + "\n\nDetalle: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
+        public static void Advertencia(string mensaje) =>
+            MessageBox.Show(mensaje, "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
         public static void Info(string mensaje) =>
             MessageBox.Show(mensaje, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);

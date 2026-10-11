@@ -48,7 +48,7 @@ El proyecto actual (compañero) **no cumple** los requerimientos. Hallazgos:
 
 | # | Hallazgo | Archivo | Decisión |
 |---|---|---|---|
-| D-01 | **Contraseña de Supabase escrita en el código** y ya presente en el historial de git (commit `647bf77`). | `Data/ConexionBD.cs` | **Rotar la contraseña en Supabase de inmediato.** Mover la cadena a `App.config` (excluido de git) o variable de entorno. |
+| D-01 | **Contraseña de Supabase escrita en el código** y ya presente en el historial de git (commit `647bf77`). | `Data/ConexionBD.cs` | **Rotar la contraseña en Supabase de inmediato.** **Resuelto:** la app usa el usuario limitado `app_riobravo` (no `postgres`); su clave se guarda cifrada en cada PC (ver RNF-02). |
 | D-02 | BD con una sola tabla `Solicitud` que mezcla artículo (texto libre), obra (texto libre), stock y estado. No hay materiales, obras, proveedores, compras ni movimientos. | `Views/FormNuevaSolicitud.cs` | Descartar. Se rehace la BD según §6. |
 | D-03 | `stock_actual` se copia en cada solicitud y se lee de la última fila: el stock no se calcula ni se descuenta. | `FormNuevaSolicitud.cs` | Descartar. Stock = campo de `Material` actualizado solo por movimientos (RN-05). |
 | D-04 | Materiales escritos a mano en el código (6 ítems, incluye "Grúa Horquilla (Días)", que es un arriendo, no un material). | `FormNuevaSolicitud.cs` | Cargar desde el catálogo en BD. |
@@ -137,7 +137,11 @@ El cliente pidió simplicidad: **3 roles**. Se eliminan *Administrador* del diag
 ## 5. Requerimientos no funcionales y estándares de calidad
 
 - **RNF-01 Plataforma:** WinForms, .NET Framework 4.7.2, C#, PostgreSQL (Supabase) vía Npgsql 6.0.11. Se mantiene.
-- **RNF-02 Seguridad:** sin credenciales en el código ni en git; cadena de conexión en `App.config` local ignorado por git (o variable de entorno). Contraseñas de usuarios con hash (ej. BCrypt/PBKDF2).
+- **RNF-02 Seguridad:** sin credenciales en el código ni en git. Contraseñas de usuarios con hash PBKDF2-SHA256.
+    - La app se conecta con el usuario de BD **`app_riobravo`** (creado en `Database/schema.sql`), con permisos mínimos: no puede borrar ni alterar tablas, no puede escribir `stock_actual` (solo el trigger), y en despachos y movimientos solo puede insertar. La clave de `postgres` nunca se usa en la app.
+    - `App.config` tiene la cadena **sin contraseña**. La clave de `app_riobravo` se obtiene (`Data/ConfiguracionConexion.cs`) de: 1) la variable de entorno `RIOBRAVO_DB_PASSWORD` (equipo de desarrollo) o 2) `%APPDATA%\RioBravo\conexion.dat`, cifrado con DPAPI por usuario de Windows.
+    - **Instalación en un PC:** copiar la carpeta del programa y abrirlo; la primera vez aparece "Configuración de conexión", se pega la clave de `app_riobravo` y queda guardada. Si la clave cambia en Supabase, el programa la vuelve a pedir.
+    - Los roles `anon`/`authenticated` de la API REST de Supabase no tienen acceso a ninguna tabla; RLS está activo en todas.
 - **RNF-03 Integridad:** toda operación que cambia stock (recepción, despacho, venta, ajuste) se ejecuta en **una transacción**: movimiento + actualización de stock juntos o nada.
 - **RNF-04 Arquitectura simple en capas:** `Views/` (formularios, sin SQL) → `Services/` (reglas de negocio) → `Data/` (repositorios con SQL parametrizado) + `Models/` (clases de entidad). Nada más.
 - **RNF-05 SQL:** siempre parametrizado (`@param`), nunca concatenado. Usar `using` y abrir la conexión explícitamente.

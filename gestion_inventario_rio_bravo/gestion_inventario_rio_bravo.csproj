@@ -53,6 +53,7 @@
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
@@ -93,6 +94,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\ConexionBD.cs" />
+    <Compile Include="Data\ConfiguracionConexion.cs" />
+    <Compile Include="Views\FormConexion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormConexion.Designer.cs">
+      <DependentUpon>FormConexion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FormLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,10 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="connectionStrings.config" Condition="Exists('connectionStrings.config')">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="connectionStrings.example.config" />
     <None Include="Database\schema.sql" />
   </ItemGroup>
   <ItemGroup>
