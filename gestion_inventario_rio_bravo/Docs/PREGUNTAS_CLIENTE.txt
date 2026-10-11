@@ -1,0 +1,104 @@
+PREGUNTAS PARA EL CLIENTE - SISTEMA DE INVENTARIO RIO BRAVO
+Fecha: 10-10-2026
+Referencia: Docs/REQUERIMIENTOS.md, seccion 11 (codigo P-xx entre corchetes)
+
+Anotar la respuesta debajo de cada pregunta.
+
+==========================================================================
+1. SOLICITUDES Y DESPACHOS A OBRAS
+==========================================================================
+
+1.1 [P-01] Cuando una obra pide materiales, ¿quien autoriza o rechaza ese pedido?
+    (Gerente, Jefe de Compras/Contador, Bodeguero u otra persona)
+    Respuesta:
+
+
+1.2 [P-09] Si una obra ya tiene un pedido autorizado y luego necesita material extra,
+    ¿ese material extra debe volver a autorizarse?
+    Respuesta:
+
+
+1.3 [P-11] Cuando bodega entrega material a una obra, ¿quien lo recibe y firma?
+    (el maestro, el jefe de obra, otra persona)
+    Respuesta:
+
+
+1.4 [P-12] ¿Es frecuente que las obras devuelvan material sobrante a bodega?
+    Si ocurre, ¿como se registra hoy?
+    Respuesta:
+
+
+==========================================================================
+2. PLANILLAS ACTUALES (Excel de "Salida de materiales")
+==========================================================================
+
+2.1 [P-03] En el encabezado de las planillas aparecen "Trompo", "Placa" y "Baño".
+    ¿Que significan? ¿Son equipos que se prestan a la obra y luego deben volver
+    a bodega (betonera, placa compactadora, baño quimico)?
+    Respuesta:
+
+
+2.2 [P-04] ¿Quien es el "Beneficiario" de la planilla?
+    ¿Es el dueño de la casa o titular de un subsidio habitacional?
+    ¿Que datos se necesitan de el? (nombre, RUT, telefono)
+    Respuesta:
+
+
+2.3 [P-05] Casa Libuy y Casa Libuy 2, o Casa Roble y Casa Roble Corta Fuego:
+    ¿son casas distintas construidas con el mismo modelo?
+    ¿Le serviria tener "modelos de casa" con su lista de materiales base,
+    para no ingresar todo de nuevo en cada obra?
+    Respuesta:
+
+
+2.4 [P-10] Algunas planillas tienen una seccion sin titulo con materiales como
+    tuberia electrica, tubos extractores y pasamanos. ¿En que categoria van?
+    (Gasfiteria, Electricidad, Otros)
+    Respuesta:
+
+
+==========================================================================
+3. COMPRAS A PROVEEDORES
+==========================================================================
+
+3.1 [P-07] Cuando se hace un pedido a un proveedor, ¿puede llegar en partes
+    (entregas parciales) o siempre llega completo?
+    Respuesta:
+
+
+3.2 [P-08] ¿Hay compras que el proveedor entrega directamente en la obra,
+    sin pasar por bodega?
+    Respuesta:
+
+
+==========================================================================
+4. VENTAS DE MATERIAL A TERCEROS
+==========================================================================
+
+4.1 [P-06] ¿Quien registra las ventas de material a terceros?
+    (Gerente, Jefe de Compras/Contador, Bodeguero)
+    Respuesta:
+
+
+==========================================================================
+5. PRECIOS Y COSTOS
+==========================================================================
+
+5.1 [P-02] ¿Como se calcula el costo de un material para saber cuanto ha costado
+    cada obra? Opciones:
+      a) Se usa el precio de la ultima compra.
+      b) Se usa un precio promedio de todas las compras.
+      c) Cada entrega guarda el precio que tenia el material ese dia.
+    Respuesta:
+
+
+5.2 [P-13] ¿Los precios se manejan con IVA o sin IVA? ¿Siempre en pesos chilenos?
+    Respuesta:
+
+
+==========================================================================
+NOTAS ADICIONALES DEL CLIENTE
+==========================================================================
+
+
+

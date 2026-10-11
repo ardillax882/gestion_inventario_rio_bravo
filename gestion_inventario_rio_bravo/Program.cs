@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using gestion_inventario_rio_bravo.Views;
 
 namespace gestion_inventario_rio_bravo
 {
@@ -16,7 +17,7 @@ namespace gestion_inventario_rio_bravo
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new Views.Form1());
         }
     }
 }
