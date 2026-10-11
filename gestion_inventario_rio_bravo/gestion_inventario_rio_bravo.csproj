@@ -93,16 +93,49 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\ConexionBD.cs" />
-    <Compile Include="Views\Form1.cs">
+    <Compile Include="Views\FormLogin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Views\FormLogin.Designer.cs">
+      <DependentUpon>FormLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\FormPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormPassword.Designer.cs">
+      <DependentUpon>FormPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormPrincipal.Designer.cs">
+      <DependentUpon>FormPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormUsuarioEditar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormUsuarioEditar.Designer.cs">
+      <DependentUpon>FormUsuarioEditar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FormUsuarios.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FormUsuarios.Designer.cs">
+      <DependentUpon>FormUsuarios.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\UsuarioRepository.cs" />
+    <Compile Include="Models\Usuario.cs" />
+    <Compile Include="Services\PasswordHasher.cs" />
+    <Compile Include="Services\Permisos.cs" />
+    <Compile Include="Services\Rut.cs" />
+    <Compile Include="Services\Sesion.cs" />
+    <Compile Include="Services\UsuarioService.cs" />
+    <Compile Include="Services\ValidacionException.cs" />
+    <Compile Include="Views\Mensajes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Views\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Views\FormPrincipal.resx">
+      <DependentUpon>FormPrincipal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -138,9 +171,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />
