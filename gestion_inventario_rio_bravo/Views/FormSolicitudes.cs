@@ -8,7 +8,7 @@ using gestion_inventario_rio_bravo.Services;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Listado de solicitudes (planillas) con filtros por obra y estado.</summary>
-    public partial class FormSolicitudes : Form
+    public partial class FormSolicitudes : Ventana
     {
         private const string PorDespachar = "Por despachar (Aprobada o Despachada parcial)";
         private readonly int? idObraInicial;

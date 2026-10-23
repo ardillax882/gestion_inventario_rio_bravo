@@ -9,7 +9,7 @@ namespace gestion_inventario_rio_bravo.Views
     /// Ajuste de inventario con motivo obligatorio (RF-24): inventario inicial, conteo físico, merma, devolución de obra.
     /// Es la forma de cargar el stock mientras no exista el módulo de compras.
     /// </summary>
-    public partial class FormAjuste : Form
+    public partial class FormAjuste : Ventana
     {
         private const string SinObra = "(ninguna: no es devolución de obra)";
         private readonly Material inicial;

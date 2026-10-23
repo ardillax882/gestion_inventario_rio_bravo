@@ -7,7 +7,7 @@ using gestion_inventario_rio_bravo.Services;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Crear o editar un usuario. Con primerGerente = true se usa al instalar, cuando la BD no tiene usuarios.</summary>
-    public partial class FormUsuarioEditar : Form
+    public partial class FormUsuarioEditar : Ventana
     {
         private readonly Usuario usuario;
         private readonly bool esNuevo;

@@ -6,7 +6,7 @@ using gestion_inventario_rio_bravo.Services;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Nueva contraseña para un usuario: el propio (cambiar mi contraseña) o cualquiera si es el Gerente (restablecer).</summary>
-    public partial class FormPassword : Form
+    public partial class FormPassword : Ventana
     {
         private readonly Usuario usuario;
 

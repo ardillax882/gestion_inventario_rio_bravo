@@ -7,7 +7,7 @@ using gestion_inventario_rio_bravo.Services;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Crear o editar una obra (RF-12, RF-13). Sus datos forman el encabezado de la planilla.</summary>
-    public partial class FormObraEditar : Form
+    public partial class FormObraEditar : Ventana
     {
         private readonly Obra obra;
 

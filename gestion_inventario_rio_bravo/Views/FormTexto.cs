@@ -3,7 +3,7 @@ using System.Windows.Forms;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Pide un texto obligatorio (ej. motivo de rechazo). Devuelve null si se cancela.</summary>
-    public partial class FormTexto : Form
+    public partial class FormTexto : Ventana
     {
         public FormTexto(string titulo, string etiqueta, int largoMaximo)
         {

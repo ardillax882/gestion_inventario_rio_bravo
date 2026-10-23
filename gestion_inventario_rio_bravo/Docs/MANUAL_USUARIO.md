@@ -67,6 +67,21 @@ También hay un botón grande, **+ Nueva solicitud (planilla de materiales)**, p
 
 > Si otra persona hizo cambios y usted no los ve, haga clic en **Actualizar**.
 
+### Agrandar o achicar la letra
+
+**Quién:** todos.
+
+Si la letra se ve muy chica, puede agrandarla en todo el programa:
+
+1. Arriba a la derecha, en la barra de menús, busque **Tamaño de letra:**.
+2. Haga clic en **A+** para agrandar la letra. Cada clic la agranda un poco más.
+3. Haga clic en **A−** para achicarla.
+4. Al lado se ve el tamaño actual, por ejemplo **130 %**. El tamaño normal es **100 %**.
+
+Todas las ventanas que abra después se verán con ese tamaño. El programa **recuerda su elección**: la próxima vez que entre con su usuario en este computador, la letra estará como la dejó. Cada persona tiene su propio tamaño.
+
+> **Atajo con el teclado:** mantenga apretada la tecla **Ctrl** y apriete **+** para agrandar o **−** para achicar.
+
 ---
 
 ## 5. Cambiar mi contraseña

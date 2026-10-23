@@ -13,7 +13,7 @@ namespace gestion_inventario_rio_bravo.Views
     /// Registra una entrega (una columna "Fecha" de la planilla, RF-17/RF-18): por cada línea con saldo
     /// se indica cuánto se entrega hoy (≤ saldo y ≤ stock). Al confirmar se descuenta el stock.
     /// </summary>
-    public partial class FormDespacho : Form
+    public partial class FormDespacho : Ventana
     {
         private readonly Solicitud solicitud;
 

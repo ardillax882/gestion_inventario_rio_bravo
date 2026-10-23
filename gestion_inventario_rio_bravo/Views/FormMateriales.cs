@@ -7,7 +7,7 @@ using gestion_inventario_rio_bravo.Services;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Catálogo de materiales con su stock actual (RF-04, RF-06, RF-07). El stock solo cambia con movimientos.</summary>
-    public partial class FormMateriales : Form
+    public partial class FormMateriales : Ventana
     {
         public FormMateriales(bool soloBajoMinimo = false)
         {

@@ -11,7 +11,7 @@ namespace gestion_inventario_rio_bravo.Views
     /// Equipos prestados a las obras (trompo, placa compactadora, baño químico): deben volver a bodega.
     /// Prestar y registrar la devolución: Gerente y Bodeguero. Los demás solo consultan.
     /// </summary>
-    public partial class FormEquipos : Form
+    public partial class FormEquipos : Ventana
     {
         public FormEquipos()
         {

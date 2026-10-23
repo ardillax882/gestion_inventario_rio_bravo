@@ -6,7 +6,7 @@ using gestion_inventario_rio_bravo.Services;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Listado de obras con costo despachado vs. presupuesto (RF-12..RF-14). Solo el Gerente crea y edita.</summary>
-    public partial class FormObras : Form
+    public partial class FormObras : Ventana
     {
         public FormObras()
         {

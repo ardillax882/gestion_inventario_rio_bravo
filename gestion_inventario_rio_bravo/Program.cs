@@ -27,6 +27,7 @@ namespace gestion_inventario_rio_bravo
             {
                 using (var login = new FormLogin())
                     if (login.ShowDialog() != DialogResult.OK) return;
+                Letra.CargarUsuario(Sesion.Actual.IdUsuario);
 
                 using (var principal = new FormPrincipal())
                 {
