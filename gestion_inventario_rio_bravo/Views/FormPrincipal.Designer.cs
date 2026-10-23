@@ -42,6 +42,7 @@ namespace gestion_inventario_rio_bravo.Views
             this.mnuAjuste = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuObrasMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuObras = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuEquipos = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSolicitudesMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuNuevaSolicitud = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSolicitudes = new System.Windows.Forms.ToolStripMenuItem();
@@ -176,7 +177,8 @@ namespace gestion_inventario_rio_bravo.Views
             // mnuObrasMenu
             //
             this.mnuObrasMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuObras});
+            this.mnuObras,
+            this.mnuEquipos});
             this.mnuObrasMenu.Name = "mnuObrasMenu";
             this.mnuObrasMenu.Size = new System.Drawing.Size(50, 20);
             this.mnuObrasMenu.Text = "&Obras";
@@ -187,6 +189,13 @@ namespace gestion_inventario_rio_bravo.Views
             this.mnuObras.Size = new System.Drawing.Size(220, 22);
             this.mnuObras.Text = "Lista de obras";
             this.mnuObras.Click += new System.EventHandler(this.mnuObras_Click);
+            //
+            // mnuEquipos
+            //
+            this.mnuEquipos.Name = "mnuEquipos";
+            this.mnuEquipos.Size = new System.Drawing.Size(220, 22);
+            this.mnuEquipos.Text = "Equipos prestados";
+            this.mnuEquipos.Click += new System.EventHandler(this.mnuEquipos_Click);
             //
             // mnuSolicitudesMenu
             //
@@ -388,12 +397,14 @@ namespace gestion_inventario_rio_bravo.Views
             this.grpStock.Padding = new System.Windows.Forms.Padding(6);
             this.grpStock.TabIndex = 0;
             this.grpStock.TabStop = false;
-            this.grpStock.Text = "Materiales bajo stock mínimo (doble clic: movimientos)";
+            this.grpStock.Text = "Stock actual de materiales (doble clic: movimientos)";
             //
             // dgvStockBajo
             //
             this.dgvStockBajo.AllowUserToAddRows = false;
             this.dgvStockBajo.AllowUserToDeleteRows = false;
+            this.dgvStockBajo.AllowUserToResizeColumns = false;
+            this.dgvStockBajo.AllowUserToResizeRows = false;
             this.dgvStockBajo.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvStockBajo.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvStockBajo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -411,6 +422,7 @@ namespace gestion_inventario_rio_bravo.Views
             this.dgvStockBajo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvStockBajo.TabIndex = 0;
             this.dgvStockBajo.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvStockBajo_CellDoubleClick);
+            this.dgvStockBajo.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvStockBajo_RowPrePaint);
             //
             // colStockCodigo
             //
@@ -467,6 +479,8 @@ namespace gestion_inventario_rio_bravo.Views
             //
             this.dgvObras.AllowUserToAddRows = false;
             this.dgvObras.AllowUserToDeleteRows = false;
+            this.dgvObras.AllowUserToResizeColumns = false;
+            this.dgvObras.AllowUserToResizeRows = false;
             this.dgvObras.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvObras.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvObras.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -521,6 +535,8 @@ namespace gestion_inventario_rio_bravo.Views
             //
             this.dgvSolicitudes.AllowUserToAddRows = false;
             this.dgvSolicitudes.AllowUserToDeleteRows = false;
+            this.dgvSolicitudes.AllowUserToResizeColumns = false;
+            this.dgvSolicitudes.AllowUserToResizeRows = false;
             this.dgvSolicitudes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvSolicitudes.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvSolicitudes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -616,6 +632,7 @@ namespace gestion_inventario_rio_bravo.Views
         private System.Windows.Forms.ToolStripMenuItem mnuAjuste;
         private System.Windows.Forms.ToolStripMenuItem mnuObrasMenu;
         private System.Windows.Forms.ToolStripMenuItem mnuObras;
+        private System.Windows.Forms.ToolStripMenuItem mnuEquipos;
         private System.Windows.Forms.ToolStripMenuItem mnuSolicitudesMenu;
         private System.Windows.Forms.ToolStripMenuItem mnuNuevaSolicitud;
         private System.Windows.Forms.ToolStripMenuItem mnuSolicitudes;

@@ -8,17 +8,12 @@ namespace gestion_inventario_rio_bravo.Data
     /// <summary>
     /// Configuración crítica (RNF-02) leída desde un archivo .env que NO va a git.
     /// Se busca junto al .exe y, si no está, en las carpetas superiores (así en desarrollo
-    /// basta con el .env en la carpeta del proyecto). Plantillas: .env.example y .env.local.example.
-    /// En Debug (F5 en Visual Studio) se prefiere .env.local = Supabase local; en Release solo .env.
+    /// basta con el .env en la carpeta del proyecto). Para cambiar de base (local o producción)
+    /// solo se edita el .env. Plantillas: .env.example (producción) y .env.local.example (Supabase local).
     /// </summary>
     public static class ConfiguracionEntorno
     {
         public const string NombreArchivo = ".env";
-#if DEBUG
-        private static readonly string[] Nombres = { ".env.local", NombreArchivo };
-#else
-        private static readonly string[] Nombres = { NombreArchivo };
-#endif
         private const string Marcador = "PEGA_AQUI_LA_CLAVE";
         private const int NivelesSuperiores = 3;
 
@@ -82,14 +77,11 @@ namespace gestion_inventario_rio_bravo.Data
 
         private static string Buscar()
         {
-            foreach (var nombre in Nombres)
+            var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            for (int i = 0; dir != null && i <= NivelesSuperiores; i++, dir = dir.Parent)
             {
-                var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-                for (int i = 0; dir != null && i <= NivelesSuperiores; i++, dir = dir.Parent)
-                {
-                    var ruta = Path.Combine(dir.FullName, nombre);
-                    if (File.Exists(ruta)) return ruta;
-                }
+                var ruta = Path.Combine(dir.FullName, NombreArchivo);
+                if (File.Exists(ruta)) return ruta;
             }
             return null;
         }

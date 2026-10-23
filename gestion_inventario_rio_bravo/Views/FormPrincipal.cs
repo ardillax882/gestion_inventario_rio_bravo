@@ -40,15 +40,16 @@ namespace gestion_inventario_rio_bravo.Views
         {
             try
             {
-                var bajo = CatalogoService.Buscar("", soloBajoMinimo: true);
+                var materiales = CatalogoService.Buscar("");
                 var obras = ObraService.ListarActivas();
                 var abiertas = SolicitudService.Listar(null, EstadoSolicitud.Pendiente, EstadoSolicitud.Aprobada, EstadoSolicitud.Despachada_parcial);
 
-                dgvStockBajo.DataSource = bajo;
+                dgvStockBajo.DataSource = materiales;
                 dgvObras.DataSource = obras;
                 dgvSolicitudes.DataSource = abiertas;
 
-                Tarjeta(btnTarjetaStock, bajo.Count, "Materiales bajo stock mínimo", bajo.Count > 0);
+                int bajo = materiales.Count(m => m.BajoMinimo);
+                Tarjeta(btnTarjetaStock, bajo, "Materiales bajo stock mínimo", bajo > 0);
                 Tarjeta(btnTarjetaObras, obras.Count(o => o.Estado == EstadoObra.En_ejecucion), "Obras en ejecución", false);
                 int pendientes = abiertas.Count(s => s.Estado == EstadoSolicitud.Pendiente);
                 Tarjeta(btnTarjetaPendientes, pendientes, "Solicitudes por aprobar", pendientes > 0 && Permisos.AprobarSolicitud);
@@ -80,6 +81,7 @@ namespace gestion_inventario_rio_bravo.Views
         private void btnTarjetaStock_Click(object sender, EventArgs e) => Abrir(new FormMateriales(soloBajoMinimo: true));
         private void mnuAjuste_Click(object sender, EventArgs e) => Abrir(new FormAjuste());
         private void mnuObras_Click(object sender, EventArgs e) => Abrir(new FormObras());
+        private void mnuEquipos_Click(object sender, EventArgs e) => Abrir(new FormEquipos());
         private void mnuSolicitudes_Click(object sender, EventArgs e) => Abrir(new FormSolicitudes());
         private void btnTarjetaPendientes_Click(object sender, EventArgs e) => Abrir(new FormSolicitudes(estado: EstadoSolicitud.Pendiente));
         private void btnTarjetaDespachar_Click(object sender, EventArgs e) => Abrir(new FormSolicitudes(porDespachar: true));
@@ -91,6 +93,15 @@ namespace gestion_inventario_rio_bravo.Views
         {
             if (e.RowIndex >= 0 && dgvStockBajo.Rows[e.RowIndex].DataBoundItem is Material m)
                 Abrir(new FormKardex(m));
+        }
+
+        /// <summary>Bajo mínimo en rojo (RF-07), igual que en Materiales.</summary>
+        private void dgvStockBajo_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            if (!(dgvStockBajo.Rows[e.RowIndex].DataBoundItem is Material m)) return;
+            var estilo = dgvStockBajo.Rows[e.RowIndex].DefaultCellStyle;
+            estilo.ForeColor = m.BajoMinimo ? Color.Firebrick : SystemColors.ControlText;
+            estilo.BackColor = m.BajoMinimo ? Color.MistyRose : SystemColors.Window;
         }
 
         private void dgvObras_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

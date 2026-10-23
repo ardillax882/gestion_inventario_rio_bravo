@@ -22,12 +22,12 @@ namespace gestion_inventario_rio_bravo.Views
         private bool cargando;    // evita marcar cambios mientras se llenan los controles
         private Font fuenteCategoria;
 
-        public FormSolicitud(int? idSolicitud = null, int? idObra = null)
+        public FormSolicitud(int? idSolicitud = null, int? idObra = null, string observaciones = null)
         {
             InitializeComponent();
             solicitud = idSolicitud.HasValue
                 ? new Solicitud { IdSolicitud = idSolicitud.Value }
-                : new Solicitud { IdObra = idObra ?? 0, UsuarioNombre = Sesion.Actual.Nombre };
+                : new Solicitud { IdObra = idObra ?? 0, UsuarioNombre = Sesion.Actual.Nombre, Observaciones = observaciones };
         }
 
         protected override void OnLoad(EventArgs e)
@@ -138,6 +138,7 @@ namespace gestion_inventario_rio_bravo.Views
             pnlAgregar.Visible = btnGuardar.Visible = editable;
             btnAprobar.Visible = btnRechazar.Visible = solicitud.Editable && !solicitud.EsNueva && Permisos.AprobarSolicitud;
             btnDespachar.Visible = solicitud.Despachable && Permisos.Despachar;
+            btnMaterialExtra.Visible = (solicitud.Despachable || solicitud.Estado == EstadoSolicitud.Despachada_total) && Permisos.RegistrarSolicitud;
             btnImprimir.Enabled = !solicitud.EsNueva;
             btnComprobante.Enabled = despachos.Count > 0;
         }
@@ -271,6 +272,16 @@ namespace gestion_inventario_rio_bravo.Views
             {
                 Mensajes.Error("El despacho se registró, pero no se pudo actualizar la vista.", ex);
             }
+        }
+
+        /// <summary>
+        /// Material extra para una obra con pedido ya aprobado: va en una solicitud nueva, que se vuelve a aprobar.
+        /// La aprobada no se modifica (sus entregas y firmas ya corresponden a lo autorizado).
+        /// </summary>
+        private void btnMaterialExtra_Click(object sender, EventArgs e)
+        {
+            using (var f = new FormSolicitud(idObra: solicitud.IdObra, observaciones: "Material extra de " + solicitud.Folio))
+                f.ShowDialog(this);
         }
 
         private void btnImprimir_Click(object sender, EventArgs e)

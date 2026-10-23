@@ -26,6 +26,8 @@ namespace gestion_inventario_rio_bravo.Views
             numSuperficie.Value = obra.SuperficieM2 ?? 0;
             txtDireccion.Text = obra.Direccion;
             txtBeneficiario.Text = obra.Beneficiario;
+            txtBeneficiarioRut.Text = obra.BeneficiarioRut;
+            txtBeneficiarioTelefono.Text = obra.BeneficiarioTelefono;
             txtMaestro.Text = obra.Maestro;
             numPresupuesto.Value = obra.PresupuestoMateriales;
         }
@@ -45,6 +47,8 @@ namespace gestion_inventario_rio_bravo.Views
                 SuperficieM2 = numSuperficie.Value == 0 ? (decimal?)null : numSuperficie.Value,
                 Direccion = txtDireccion.Text,
                 Beneficiario = txtBeneficiario.Text,
+                BeneficiarioRut = txtBeneficiarioRut.Text,
+                BeneficiarioTelefono = txtBeneficiarioTelefono.Text,
                 Maestro = txtMaestro.Text,
                 PresupuestoMateriales = numPresupuesto.Value,
                 Estado = (EstadoObra)cmbEstado.SelectedValue

@@ -4,7 +4,6 @@ namespace gestion_inventario_rio_bravo.Services
 {
     /// <summary>
     /// Matriz de permisos de Docs/REQUERIMIENTOS.md §3. Las vistas consultan aquí, nunca el rol directamente.
-    /// Puntos pendientes con el cliente: AprobarSolicitud (P-01) y RegistrarVenta (P-06).
     /// </summary>
     public static class Permisos
     {
@@ -15,10 +14,10 @@ namespace gestion_inventario_rio_bravo.Services
         public static bool CrearOrdenCompra => Sesion.Es(Rol.Gerente, Rol.Jefe_Compras);
         public static bool RecepcionarOrdenCompra => Sesion.Es(Rol.Gerente, Rol.Bodeguero);
         public static bool RegistrarSolicitud => Sesion.Es(Rol.Gerente, Rol.Bodeguero);
-        public static bool AprobarSolicitud => Sesion.Es(Rol.Gerente);                    // P-01 provisorio
+        public static bool AprobarSolicitud => Sesion.Es(Rol.Gerente, Rol.Bodeguero);     // aprueba el encargado de bodega
         public static bool Despachar => Sesion.Es(Rol.Gerente, Rol.Bodeguero);
-        public static bool RegistrarVenta => Sesion.Es(Rol.Gerente, Rol.Jefe_Compras);     // P-06 provisorio
         public static bool AjustarInventario => Sesion.Es(Rol.Gerente, Rol.Bodeguero);
+        public static bool PrestarEquipos => Sesion.Es(Rol.Gerente, Rol.Bodeguero);
         public static bool VerReportes => Sesion.Actual != null;
     }
 }

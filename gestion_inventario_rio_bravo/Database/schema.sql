@@ -6,21 +6,33 @@
 -- solo sobre una BD vacía; para cambios posteriores crear scripts de migración.
 --
 -- Folios: el id de cada documento ES su folio correlativo (RN-11).
---         Se muestra con prefijo en la app: SOL-000123, DES-000045, OC-..., VEN-...
+--         Se muestra con prefijo en la app: SOL-000123, DES-000045, OC-...
+-- Cambios posteriores a la puesta en producción: Database/migraciones/ (este archivo ya los incluye).
 -- Stock:  material.stock_actual solo lo modifica el trigger de
 --         movimiento_inventario (RN-05) y nunca puede quedar negativo (RN-04).
 -- =============================================================================
 
 BEGIN;
 
--- La tabla "Solicitud" del proyecto anterior choca con el nuevo nombre.
--- No se borra: se renombra a solicitud_legacy para conservar sus datos.
+-- Las tablas del proyecto anterior (modelo incorrecto, ver REQUERIMIENTOS.md §2) se ELIMINAN
+-- con sus datos, por decisión del responsable (2026-10-11). Se reconocen porque les falta una
+-- columna del modelo nuevo, así una tabla nueva nunca se borra al re-ejecutar el script.
+-- DROP TABLE también elimina sus secuencias e índices (ej. usuario_pkey), que chocarían con los nuevos.
 DO $$
+DECLARE
+    v_tabla TEXT; v_columna TEXT;
 BEGIN
-    IF EXISTS (SELECT 1 FROM information_schema.columns
-               WHERE table_schema = 'public' AND table_name = 'solicitud' AND column_name = 'articulo') THEN
-        ALTER TABLE solicitud RENAME TO solicitud_legacy;
-    END IF;
+    FOR v_tabla, v_columna IN VALUES
+        ('solicitud', 'id_obra'), ('usuario', 'password_hash'), ('material', 'nombre'),
+        ('obra', 'superficie_m2'), ('proveedor', 'activo'),
+        ('ordencompra', NULL), ('detalleorden', NULL), ('movimientoinventario', NULL)
+    LOOP
+        CONTINUE WHEN to_regclass('public.' || v_tabla) IS NULL;
+        CONTINUE WHEN v_columna IS NOT NULL AND EXISTS (
+            SELECT 1 FROM information_schema.columns
+             WHERE table_schema = 'public' AND table_name = v_tabla AND column_name = v_columna);
+        EXECUTE format('DROP TABLE public.%I CASCADE', v_tabla);
+    END LOOP;
 END $$;
 
 -- -----------------------------------------------------------------------------
@@ -46,14 +58,6 @@ CREATE TABLE proveedor (
     activo             BOOLEAN      NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE cliente (
-    id_cliente  INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    rut         VARCHAR(12)  NOT NULL UNIQUE,
-    nombre      VARCHAR(100) NOT NULL,
-    telefono    VARCHAR(20),
-    email       VARCHAR(100)
-);
-
 CREATE TABLE categoria (
     id_categoria  INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nombre        VARCHAR(50) NOT NULL UNIQUE,
@@ -72,7 +76,7 @@ CREATE TABLE material (
     id_categoria     INT           REFERENCES categoria,  -- categoría por defecto (RN-10)
     stock_actual     NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (stock_actual >= 0),   -- RN-04
     stock_minimo     NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (stock_minimo >= 0),
-    precio_unitario  NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (precio_unitario >= 0), -- P-02 pendiente
+    precio_unitario  NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (precio_unitario >= 0), -- CLP con IVA
     activo           BOOLEAN       NOT NULL DEFAULT TRUE
 );
 
@@ -81,7 +85,9 @@ CREATE TABLE obra (
     nombre_obra             VARCHAR(100)  NOT NULL,
     superficie_m2           NUMERIC(6,2)  CHECK (superficie_m2 > 0),
     direccion               VARCHAR(150),
-    beneficiario            VARCHAR(100),             -- P-04 pendiente
+    beneficiario            VARCHAR(100),             -- titular del subsidio habitacional
+    beneficiario_rut        VARCHAR(12),
+    beneficiario_telefono   VARCHAR(20),
     maestro                 VARCHAR(100),
     presupuesto_materiales  NUMERIC(14,2) NOT NULL DEFAULT 0 CHECK (presupuesto_materiales >= 0),
     estado                  VARCHAR(20)   NOT NULL DEFAULT 'En_planificacion'
@@ -125,7 +131,7 @@ CREATE TABLE solicitud (
     id_usuario_aprueba  INT          REFERENCES usuario,
     fecha_aprobacion    TIMESTAMP,
     motivo_rechazo      VARCHAR(200),
-    equipo_trompo       BOOLEAN      NOT NULL DEFAULT FALSE,        -- P-03 pendiente
+    equipo_trompo       BOOLEAN      NOT NULL DEFAULT FALSE,        -- equipos que pide la obra; el préstamo va en prestamo_equipo
     equipo_placa        BOOLEAN      NOT NULL DEFAULT FALSE,
     equipo_bano         BOOLEAN      NOT NULL DEFAULT FALSE,
     observaciones       VARCHAR(300),
@@ -158,35 +164,32 @@ CREATE TABLE detalle_despacho (
 );
 
 -- -----------------------------------------------------------------------------
--- Ventas a terceros
+-- Equipos prestados a obras (trompo = betonera, placa compactadora, baño químico): deben volver.
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE venta (
-    id_venta    INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    id_cliente  INT           NOT NULL REFERENCES cliente,
-    id_usuario  INT           NOT NULL REFERENCES usuario,
-    fecha       TIMESTAMP     NOT NULL DEFAULT now(),
-    total       NUMERIC(14,2) NOT NULL DEFAULT 0,
-    estado      VARCHAR(10)   NOT NULL DEFAULT 'Emitida' CHECK (estado IN ('Emitida', 'Anulada'))
-);
-
-CREATE TABLE detalle_venta (
-    id_detalle_venta  INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    id_venta          INT           NOT NULL REFERENCES venta ON DELETE CASCADE,
-    id_material       INT           NOT NULL REFERENCES material,
-    cantidad          NUMERIC(12,2) NOT NULL CHECK (cantidad > 0),
-    precio_venta      NUMERIC(12,2) NOT NULL CHECK (precio_venta >= 0)
+CREATE TABLE prestamo_equipo (
+    id_prestamo          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    equipo               VARCHAR(10)  NOT NULL CHECK (equipo IN ('Trompo', 'Placa', 'Bano')),
+    id_obra              INT          NOT NULL REFERENCES obra,
+    id_usuario           INT          NOT NULL REFERENCES usuario,   -- quien lo entrega
+    fecha_prestamo       TIMESTAMP    NOT NULL DEFAULT now(),
+    id_usuario_devuelve  INT          REFERENCES usuario,            -- quien lo recibe de vuelta
+    fecha_devolucion     TIMESTAMP,
+    observaciones        VARCHAR(200),
+    CHECK ((fecha_devolucion IS NULL) = (id_usuario_devuelve IS NULL)),
+    CHECK (fecha_devolucion IS NULL OR fecha_devolucion >= fecha_prestamo)
 );
 
 -- -----------------------------------------------------------------------------
 -- Kardex: solo inserción (RN-09). Cada fila tiene exactamente su documento de origen.
+-- AJUSTE_ENTRADA con id_obra = devolución de material sobrante de esa obra (resta de su costo).
 -- -----------------------------------------------------------------------------
 
 CREATE TABLE movimiento_inventario (
     id_movimiento    INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     id_material      INT           NOT NULL REFERENCES material,
     tipo             VARCHAR(16)   NOT NULL CHECK (tipo IN
-                        ('ENTRADA_COMPRA', 'SALIDA_DESPACHO', 'SALIDA_VENTA', 'AJUSTE_ENTRADA', 'AJUSTE_SALIDA')),
+                        ('ENTRADA_COMPRA', 'SALIDA_DESPACHO', 'AJUSTE_ENTRADA', 'AJUSTE_SALIDA')),
     cantidad         NUMERIC(12,2) NOT NULL CHECK (cantidad > 0),
     precio_unitario  NUMERIC(12,2) NOT NULL CHECK (precio_unitario >= 0),  -- valor al momento
     fecha_hora       TIMESTAMP     NOT NULL DEFAULT now(),
@@ -194,14 +197,12 @@ CREATE TABLE movimiento_inventario (
     id_obra          INT           REFERENCES obra,
     id_orden         INT           REFERENCES orden_compra,
     id_despacho      INT           REFERENCES despacho,
-    id_venta         INT           REFERENCES venta,
     motivo           VARCHAR(200),
-    CHECK (
-        (tipo = 'ENTRADA_COMPRA'  AND id_orden    IS NOT NULL AND id_despacho IS NULL AND id_venta IS NULL) OR
-        (tipo = 'SALIDA_DESPACHO' AND id_despacho IS NOT NULL AND id_obra IS NOT NULL AND id_orden IS NULL AND id_venta IS NULL) OR
-        (tipo = 'SALIDA_VENTA'    AND id_venta    IS NOT NULL AND id_orden IS NULL AND id_despacho IS NULL) OR
-        (tipo IN ('AJUSTE_ENTRADA', 'AJUSTE_SALIDA') AND motivo IS NOT NULL
-                                  AND id_orden IS NULL AND id_despacho IS NULL AND id_venta IS NULL)
+    CONSTRAINT movimiento_inventario_origen_check CHECK (
+        (tipo = 'ENTRADA_COMPRA'  AND id_orden    IS NOT NULL AND id_despacho IS NULL) OR
+        (tipo = 'SALIDA_DESPACHO' AND id_despacho IS NOT NULL AND id_obra IS NOT NULL AND id_orden IS NULL) OR
+        (tipo = 'AJUSTE_ENTRADA'  AND motivo IS NOT NULL AND id_orden IS NULL AND id_despacho IS NULL) OR
+        (tipo = 'AJUSTE_SALIDA'   AND motivo IS NOT NULL AND id_orden IS NULL AND id_despacho IS NULL AND id_obra IS NULL)
     )
 );
 
@@ -228,7 +229,8 @@ CREATE TRIGGER trg_aplicar_movimiento
     FOR EACH ROW EXECUTE FUNCTION fn_aplicar_movimiento();
 
 -- Los movimientos no se editan ni borran (RN-09).
-CREATE FUNCTION fn_movimiento_inmutable() RETURNS trigger AS $$
+CREATE FUNCTION fn_movimiento_inmutable() RETURNS trigger
+    SET search_path = public AS $$
 BEGIN
     RAISE EXCEPTION 'Los movimientos de inventario no se modifican ni eliminan; registre un ajuste.';
 END $$ LANGUAGE plpgsql;
@@ -270,7 +272,7 @@ INSERT INTO categoria (orden, nombre, prefijo) VALUES
     (13, 'Gasfitería',             'GAS'),
     (14, 'Red de gas',             'RGA'),
     (15, 'Terminaciones',          'TER'),
-    (16, 'Otros',                  'OTR');
+    (16, 'Electricidad',           'ELE');
 
 -- -----------------------------------------------------------------------------
 -- Seguridad (RNF-02)
@@ -292,14 +294,14 @@ GRANT USAGE ON SCHEMA public TO app_riobravo;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO app_riobravo;
 
 -- Maestros y encabezados: se crean y editan (se desactivan con "activo"), no se borran.
-GRANT SELECT, INSERT, UPDATE ON usuario, proveedor, cliente, categoria, obra, orden_compra, solicitud, venta
+GRANT SELECT, INSERT, UPDATE ON usuario, proveedor, categoria, obra, orden_compra, solicitud, prestamo_equipo
     TO app_riobravo;
 
 -- Líneas editables mientras el documento está en borrador.
 GRANT SELECT, INSERT, UPDATE, DELETE ON detalle_orden, detalle_solicitud TO app_riobravo;
 
--- Despachos y líneas de venta son definitivos: solo se registran (una venta se anula con su estado).
-GRANT SELECT, INSERT ON despacho, detalle_despacho, detalle_venta TO app_riobravo;
+-- Despachos son definitivos: solo se registran.
+GRANT SELECT, INSERT ON despacho, detalle_despacho TO app_riobravo;
 
 -- Material: la app nunca escribe stock_actual (lo hace solo el trigger, RN-05).
 GRANT SELECT ON material TO app_riobravo;
@@ -316,9 +318,9 @@ GRANT SELECT ON v_saldo_solicitud TO app_riobravo;
 DO $$
 DECLARE t TEXT;
 BEGIN
-    FOREACH t IN ARRAY ARRAY['usuario', 'proveedor', 'cliente', 'categoria', 'material', 'obra',
+    FOREACH t IN ARRAY ARRAY['usuario', 'proveedor', 'categoria', 'material', 'obra',
                              'orden_compra', 'detalle_orden', 'solicitud', 'detalle_solicitud',
-                             'despacho', 'detalle_despacho', 'venta', 'detalle_venta', 'movimiento_inventario']
+                             'despacho', 'detalle_despacho', 'prestamo_equipo', 'movimiento_inventario']
     LOOP
         EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', t);
         EXECUTE format('CREATE POLICY app_riobravo_acceso ON %I TO app_riobravo USING (true) WITH CHECK (true)', t);
@@ -327,6 +329,10 @@ END $$;
 
 -- La vista se evalúa con los permisos y RLS de quien consulta, no del dueño.
 ALTER VIEW v_saldo_solicitud SET (security_invoker = true);
+
+-- Las funciones de trigger no se llaman directamente (los triggers se ejecutan igual sin EXECUTE).
+-- PostgreSQL da EXECUTE a PUBLIC por defecto: se quita para que la API de Supabase no las exponga.
+REVOKE EXECUTE ON FUNCTION fn_aplicar_movimiento(), fn_movimiento_inmutable() FROM PUBLIC;
 
 -- Supabase expone el esquema public por su API REST a los roles anon/authenticated.
 -- Este sistema no usa esa API: se les quita todo acceso, también a tablas futuras.

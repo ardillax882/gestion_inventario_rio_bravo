@@ -24,6 +24,8 @@ namespace gestion_inventario_rio_bravo.Views
             this.lblTipo = new System.Windows.Forms.Label();
             this.rdbEntrada = new System.Windows.Forms.RadioButton();
             this.rdbSalida = new System.Windows.Forms.RadioButton();
+            this.lblObra = new System.Windows.Forms.Label();
+            this.cmbObra = new System.Windows.Forms.ComboBox();
             this.lblCantidad = new System.Windows.Forms.Label();
             this.numCantidad = new System.Windows.Forms.NumericUpDown();
             this.lblMotivo = new System.Windows.Forms.Label();
@@ -94,18 +96,34 @@ namespace gestion_inventario_rio_bravo.Views
             this.rdbSalida.TabIndex = 2;
             this.rdbSalida.Text = "Salida (resta stock)";
             this.rdbSalida.UseVisualStyleBackColor = true;
+            this.rdbSalida.CheckedChanged += new System.EventHandler(this.rdbSalida_CheckedChanged);
+            //
+            // lblObra
+            //
+            this.lblObra.AutoSize = true;
+            this.lblObra.Location = new System.Drawing.Point(20, 106);
+            this.lblObra.Name = "lblObra";
+            this.lblObra.Text = "Obra:";
+            //
+            // cmbObra
+            //
+            this.cmbObra.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbObra.Location = new System.Drawing.Point(110, 103);
+            this.cmbObra.Name = "cmbObra";
+            this.cmbObra.Size = new System.Drawing.Size(380, 21);
+            this.cmbObra.TabIndex = 3;
             //
             // lblCantidad
             //
             this.lblCantidad.AutoSize = true;
-            this.lblCantidad.Location = new System.Drawing.Point(20, 106);
+            this.lblCantidad.Location = new System.Drawing.Point(20, 136);
             this.lblCantidad.Name = "lblCantidad";
             this.lblCantidad.Text = "Cantidad:";
             //
             // numCantidad
             //
             this.numCantidad.DecimalPlaces = 2;
-            this.numCantidad.Location = new System.Drawing.Point(110, 103);
+            this.numCantidad.Location = new System.Drawing.Point(110, 133);
             this.numCantidad.Maximum = new decimal(new int[] { 99999999, 0, 0, 0 });
             this.numCantidad.Name = "numCantidad";
             this.numCantidad.Size = new System.Drawing.Size(120, 20);
@@ -115,13 +133,13 @@ namespace gestion_inventario_rio_bravo.Views
             // lblMotivo
             //
             this.lblMotivo.AutoSize = true;
-            this.lblMotivo.Location = new System.Drawing.Point(20, 136);
+            this.lblMotivo.Location = new System.Drawing.Point(20, 166);
             this.lblMotivo.Name = "lblMotivo";
             this.lblMotivo.Text = "Motivo:";
             //
             // txtMotivo
             //
-            this.txtMotivo.Location = new System.Drawing.Point(110, 133);
+            this.txtMotivo.Location = new System.Drawing.Point(110, 163);
             this.txtMotivo.MaxLength = 200;
             this.txtMotivo.Name = "txtMotivo";
             this.txtMotivo.Size = new System.Drawing.Size(380, 20);
@@ -133,7 +151,7 @@ namespace gestion_inventario_rio_bravo.Views
             this.pnlMotivos.Controls.Add(this.btnMotivoConteo);
             this.pnlMotivos.Controls.Add(this.btnMotivoMerma);
             this.pnlMotivos.Controls.Add(this.btnMotivoDevolucion);
-            this.pnlMotivos.Location = new System.Drawing.Point(106, 158);
+            this.pnlMotivos.Location = new System.Drawing.Point(106, 188);
             this.pnlMotivos.Name = "pnlMotivos";
             this.pnlMotivos.Size = new System.Drawing.Size(404, 30);
             this.pnlMotivos.TabIndex = 5;
@@ -168,11 +186,11 @@ namespace gestion_inventario_rio_bravo.Views
             this.btnMotivoDevolucion.Size = new System.Drawing.Size(120, 24);
             this.btnMotivoDevolucion.Text = "Devolución de obra";
             this.btnMotivoDevolucion.UseVisualStyleBackColor = true;
-            this.btnMotivoDevolucion.Click += new System.EventHandler(this.btnMotivo_Click);
+            this.btnMotivoDevolucion.Click += new System.EventHandler(this.btnMotivoDevolucion_Click);
             //
             // btnGuardar
             //
-            this.btnGuardar.Location = new System.Drawing.Point(304, 202);
+            this.btnGuardar.Location = new System.Drawing.Point(304, 232);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(90, 28);
             this.btnGuardar.TabIndex = 6;
@@ -183,7 +201,7 @@ namespace gestion_inventario_rio_bravo.Views
             // btnCancelar
             //
             this.btnCancelar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancelar.Location = new System.Drawing.Point(400, 202);
+            this.btnCancelar.Location = new System.Drawing.Point(400, 232);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(90, 28);
             this.btnCancelar.TabIndex = 7;
@@ -195,7 +213,7 @@ namespace gestion_inventario_rio_bravo.Views
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancelar;
-            this.ClientSize = new System.Drawing.Size(514, 246);
+            this.ClientSize = new System.Drawing.Size(514, 276);
             this.Controls.Add(this.lblMaterial);
             this.Controls.Add(this.cmbMaterial);
             this.Controls.Add(this.lblStock);
@@ -203,6 +221,8 @@ namespace gestion_inventario_rio_bravo.Views
             this.Controls.Add(this.lblTipo);
             this.Controls.Add(this.rdbEntrada);
             this.Controls.Add(this.rdbSalida);
+            this.Controls.Add(this.lblObra);
+            this.Controls.Add(this.cmbObra);
             this.Controls.Add(this.lblCantidad);
             this.Controls.Add(this.numCantidad);
             this.Controls.Add(this.lblMotivo);
@@ -233,6 +253,8 @@ namespace gestion_inventario_rio_bravo.Views
         private System.Windows.Forms.Label lblTipo;
         private System.Windows.Forms.RadioButton rdbEntrada;
         private System.Windows.Forms.RadioButton rdbSalida;
+        private System.Windows.Forms.Label lblObra;
+        private System.Windows.Forms.ComboBox cmbObra;
         private System.Windows.Forms.Label lblCantidad;
         private System.Windows.Forms.NumericUpDown numCantidad;
         private System.Windows.Forms.Label lblMotivo;
