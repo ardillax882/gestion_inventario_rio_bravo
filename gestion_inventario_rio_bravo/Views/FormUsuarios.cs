@@ -6,7 +6,7 @@ using gestion_inventario_rio_bravo.Services;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Listado y gestión de usuarios (solo Gerente, RF-02).</summary>
-    public partial class FormUsuarios : Form
+    public partial class FormUsuarios : Ventana
     {
         public FormUsuarios()
         {

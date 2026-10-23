@@ -6,7 +6,7 @@ using gestion_inventario_rio_bravo.Services;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Kardex de un material (RF-25): todos sus movimientos con saldo. Solo lectura.</summary>
-    public partial class FormKardex : Form
+    public partial class FormKardex : Ventana
     {
         private readonly Material material;
 

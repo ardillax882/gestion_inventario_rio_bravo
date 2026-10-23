@@ -213,7 +213,11 @@
     <Compile Include="Views\Impresiones.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Views\Letra.cs" />
     <Compile Include="Views\Mensajes.cs" />
+    <Compile Include="Views\Ventana.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Views\FormObraEditar.resx">

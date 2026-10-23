@@ -48,6 +48,10 @@ namespace gestion_inventario_rio_bravo.Views
             this.mnuSolicitudes = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAdministracion = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuUsuarios = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuLetraMas = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblLetraPorcentaje = new System.Windows.Forms.ToolStripLabel();
+            this.mnuLetraMenos = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblLetra = new System.Windows.Forms.ToolStripLabel();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lblSesion = new System.Windows.Forms.ToolStripStatusLabel();
             this.tlpInicio = new System.Windows.Forms.TableLayoutPanel();
@@ -108,7 +112,11 @@ namespace gestion_inventario_rio_bravo.Views
             this.mnuInventario,
             this.mnuObrasMenu,
             this.mnuSolicitudesMenu,
-            this.mnuAdministracion});
+            this.mnuAdministracion,
+            this.mnuLetraMas,
+            this.lblLetraPorcentaje,
+            this.mnuLetraMenos,
+            this.lblLetra});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1024, 24);
@@ -234,6 +242,39 @@ namespace gestion_inventario_rio_bravo.Views
             this.mnuUsuarios.Size = new System.Drawing.Size(180, 22);
             this.mnuUsuarios.Text = "Usuarios";
             this.mnuUsuarios.Click += new System.EventHandler(this.mnuUsuarios_Click);
+            //
+            // mnuLetraMas  (los cuatro van a la derecha; con Alignment Right el primero queda en el extremo)
+            //
+            this.mnuLetraMas.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mnuLetraMas.Name = "mnuLetraMas";
+            this.mnuLetraMas.Size = new System.Drawing.Size(34, 20);
+            this.mnuLetraMas.Text = "A+";
+            this.mnuLetraMas.ToolTipText = "Agrandar la letra (Ctrl +)";
+            this.mnuLetraMas.Click += new System.EventHandler(this.mnuLetraMas_Click);
+            //
+            // lblLetraPorcentaje
+            //
+            this.lblLetraPorcentaje.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.lblLetraPorcentaje.Name = "lblLetraPorcentaje";
+            this.lblLetraPorcentaje.Size = new System.Drawing.Size(35, 17);
+            this.lblLetraPorcentaje.Text = "100 %";
+            //
+            // mnuLetraMenos
+            //
+            this.mnuLetraMenos.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mnuLetraMenos.Name = "mnuLetraMenos";
+            this.mnuLetraMenos.Size = new System.Drawing.Size(31, 20);
+            this.mnuLetraMenos.Text = "A−";
+            this.mnuLetraMenos.ToolTipText = "Achicar la letra (Ctrl −)";
+            this.mnuLetraMenos.Click += new System.EventHandler(this.mnuLetraMenos_Click);
+            //
+            // lblLetra
+            //
+            this.lblLetra.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.lblLetra.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.lblLetra.Name = "lblLetra";
+            this.lblLetra.Size = new System.Drawing.Size(92, 17);
+            this.lblLetra.Text = "Tamaño de letra:";
             //
             // statusStrip1
             //
@@ -638,6 +679,10 @@ namespace gestion_inventario_rio_bravo.Views
         private System.Windows.Forms.ToolStripMenuItem mnuSolicitudes;
         private System.Windows.Forms.ToolStripMenuItem mnuAdministracion;
         private System.Windows.Forms.ToolStripMenuItem mnuUsuarios;
+        private System.Windows.Forms.ToolStripMenuItem mnuLetraMas;
+        private System.Windows.Forms.ToolStripLabel lblLetraPorcentaje;
+        private System.Windows.Forms.ToolStripMenuItem mnuLetraMenos;
+        private System.Windows.Forms.ToolStripLabel lblLetra;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel lblSesion;
         private System.Windows.Forms.TableLayoutPanel tlpInicio;

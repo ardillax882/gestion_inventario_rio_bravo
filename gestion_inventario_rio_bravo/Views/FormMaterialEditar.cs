@@ -6,7 +6,7 @@ using gestion_inventario_rio_bravo.Services;
 namespace gestion_inventario_rio_bravo.Views
 {
     /// <summary>Crear o editar un material del catálogo (RF-04). El código se propone según la categoría (§8.4).</summary>
-    public partial class FormMaterialEditar : Form
+    public partial class FormMaterialEditar : Ventana
     {
         private readonly Material material;
         private bool codigoEditadoAMano;

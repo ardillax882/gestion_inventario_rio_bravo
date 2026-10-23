@@ -11,7 +11,7 @@ namespace gestion_inventario_rio_bravo.Views
     /// Ventana principal = pantalla de Inicio: resumen de stock, obras y solicitudes abiertas, con accesos directos.
     /// El menú se arma según los permisos del usuario en sesión (RF-03).
     /// </summary>
-    public partial class FormPrincipal : Form
+    public partial class FormPrincipal : Ventana
     {
         /// <summary>True si el usuario eligió "Cerrar sesión" (volver al login) en vez de salir.</summary>
         public bool CerroSesion { get; private set; }
@@ -27,6 +27,7 @@ namespace gestion_inventario_rio_bravo.Views
             mnuAdministracion.Visible = Permisos.GestionarUsuarios;
             mnuAjuste.Visible = Permisos.AjustarInventario;
             mnuNuevaSolicitud.Visible = btnTarjetaNueva.Visible = Permisos.RegistrarSolicitud;
+            MostrarLetra();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -129,5 +130,31 @@ namespace gestion_inventario_rio_bravo.Views
         }
 
         private void mnuSalir_Click(object sender, EventArgs e) => Close();
+
+        // --- Tamaño de letra ---
+
+        private void mnuLetraMas_Click(object sender, EventArgs e) => CambiarLetra(+1);
+        private void mnuLetraMenos_Click(object sender, EventArgs e) => CambiarLetra(-1);
+
+        private void CambiarLetra(int pasos)
+        {
+            Letra.Cambiar(pasos);
+            MostrarLetra();
+        }
+
+        private void MostrarLetra()
+        {
+            lblLetraPorcentaje.Text = Letra.Porcentaje + " %";
+            mnuLetraMenos.Enabled = Letra.Porcentaje > Letra.Niveles.First();
+            mnuLetraMas.Enabled = Letra.Porcentaje < Letra.Niveles.Last();
+        }
+
+        /// <summary>Ctrl + y Ctrl − (también los del teclado numérico) cambian la letra, como en el navegador.</summary>
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.Oemplus) || keyData == (Keys.Control | Keys.Add)) { CambiarLetra(+1); return true; }
+            if (keyData == (Keys.Control | Keys.OemMinus) || keyData == (Keys.Control | Keys.Subtract)) { CambiarLetra(-1); return true; }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }

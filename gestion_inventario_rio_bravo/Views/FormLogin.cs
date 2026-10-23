@@ -4,7 +4,7 @@ using gestion_inventario_rio_bravo.Services;
 
 namespace gestion_inventario_rio_bravo.Views
 {
-    public partial class FormLogin : Form
+    public partial class FormLogin : Ventana
     {
         public FormLogin()
         {

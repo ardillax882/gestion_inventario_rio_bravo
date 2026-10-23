@@ -13,7 +13,7 @@ namespace gestion_inventario_rio_bravo.Views
     /// Crear/editar (Pendiente), aprobar o rechazar, despachar por partes e imprimir.
     /// Los botones se muestran según el rol y el estado de la solicitud.
     /// </summary>
-    public partial class FormSolicitud : Form
+    public partial class FormSolicitud : Ventana
     {
         private Solicitud solicitud;
         private List<Despacho> despachos = new List<Despacho>();
