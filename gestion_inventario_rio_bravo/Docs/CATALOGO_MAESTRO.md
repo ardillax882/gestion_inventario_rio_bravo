@@ -33,10 +33,10 @@
 | Pinturas | PIN | 10 | 3 |
 | Sala de baño | BAN | 29 | 1 |
 | Canales | CAN | 14 | 2 |
-| Gasfitería | GAS | 14 | 1 |
+| Gasfitería | GAS | 15 | 2 |
 | Red de gas | RGA | 18 | 3 |
-| Terminaciones | TER | 18 | 5 |
-| Otros | OTR | 6 | 2 |
+| Terminaciones | TER | 22 | 5 |
+| Electricidad | ELE | 1 | 1 |
 | **Total** | | **231** | **40** |
 
 ## RAD · Radier
@@ -292,6 +292,7 @@
 | GAS-012 | Soldadura de estaño | rollo | 6: Larqui, Libuy 2, Milahue, Milahue (borrador), Roble, Roble CF | Rollo de estaño |  |
 | GAS-013 | Tee cobre SO-SO | un | 6: Larqui, Libuy 2, Milahue, Milahue (borrador), Roble, Roble CF | Tee So-So | También en Red de gas. |
 | GAS-014 | Teflón blanco | rollo | 6: Larqui, Libuy 2, Milahue, Milahue (borrador), Roble, Roble CF | Teflon Blanco |  |
+| GAS-015 | Gasfitería (ítem general) | un | 2: Castaño, Trankura | Gasfitería | Venía en la sección sin título. Línea "Gasfitería" con cantidad 1 (Libuy la tiene sin cantidad). ¿Qué incluye? [REVISAR] |
 
 ## RGA · Red de gas
 
@@ -338,17 +339,16 @@
 | TER-016 | Tubo PVC 20 mm | m | 8: Castaño, Larqui, Libuy, Libuy 2, Milahue, Roble, Roble CF, Trankura | Pvc 20 | Cantidad "variable": se define al despachar. |
 | TER-017 | Zinc 2,5 m | plancha | 8: Castaño, Larqui, Libuy, Libuy 2, Milahue, Roble, Roble CF, Trankura | Zinc 2,5 mt |  |
 | TER-018 | Zinc en V | un | 4: Larqui, Milahue, Roble, Roble CF | Zinc en V |  |
+| TER-019 | Gorro extractor | un | 3: Castaño, Larqui, Milahue | Gorro extractor · Gorro Extractor | Venía en secciones sin título (cliente: terminaciones). |
+| TER-020 | Pasamanos exterior | un | 2: Libuy, Libuy 2 | Pasamanos exterior | Venía en secciones sin título (cliente: terminaciones). |
+| TER-021 | Pasamanos interior | un | 1: Libuy | Pasamanos interiores | Venía en secciones sin título (cliente: terminaciones). |
+| TER-022 | Tubo extractor | un | 3: Castaño, Larqui, Milahue | tubo extractor · Tubos extractores | Venía en secciones sin título (cliente: terminaciones). |
 
-## OTR · Otros
+## ELE · Electricidad
 
 | Código | Nombre | Unidad | Aparece en | Nombres originales | Observaciones |
 |---|---|---|---|---|---|
-| OTR-001 | Gasfitería (ítem general) | un | 2: Castaño, Trankura | Gasfitería | Línea "Gasfitería" con cantidad 1 en la sección sin título (Libuy la tiene sin cantidad). ¿Qué incluye? [REVISAR] |
-| OTR-002 | Gorro extractor | un | 3: Castaño, Larqui, Milahue | Gorro extractor · Gorro Extractor | Venía en secciones sin título. |
-| OTR-003 | Pasamanos exterior | un | 2: Libuy, Libuy 2 | Pasamanos exterior | Venía en secciones sin título. |
-| OTR-004 | Pasamanos interior | un | 1: Libuy | Pasamanos interiores | Venía en secciones sin título. |
-| OTR-005 | Tubería eléctrica | un | 6: Castaño, Larqui, Libuy, Libuy 2, Milahue, Trankura | Tuberia eléctrica | Venía en secciones sin título. ¿Unidad (rollo, m)? [REVISAR] |
-| OTR-006 | Tubo extractor | un | 3: Castaño, Larqui, Milahue | tubo extractor · Tubos extractores | Venía en secciones sin título. |
+| ELE-001 | Tubería eléctrica | un | 6: Castaño, Larqui, Libuy, Libuy 2, Milahue, Trankura | Tuberia eléctrica | Venía en secciones sin título (cliente: partida eléctrica). ¿Unidad (rollo, m)? [REVISAR] |
 
 ## Notas de la estandarización
 
@@ -356,6 +356,6 @@
 - Los nombres en plural pasaron a singular y las medidas se escriben igual en todo el catálogo (`3,2 m`, `75x75 mm`, `4"`).
 - "Esquineros" y "Estanque" se separaron según la sección: el esquinero de siding no es el de canal, y el estanque de Terminaciones no es el del WC.
 - Las ventanas pasaron a ser un material por medida (`Ventana 130x130 cm`). Se supuso que las medidas están en centímetros. [REVISAR]
-- La sección **sin título** de Libuy, Trancura y Castaño está justo antes de Revestimiento interno y trae Gasfitería, Tubería eléctrica y extractores: parecen **instalaciones embutidas antes de revestir**. Se dejaron en "Otros"; ¿conviene una categoría "Instalaciones"? [REVISAR]
+- La sección **sin título** (Larqui, Libuy, Libuy 2, Trancura, Castaño) se repartió según el cliente (2026-10-14): tubería eléctrica → **Electricidad** (partida eléctrica, reemplaza a "Otros"); extractores y pasamanos → **Terminaciones**; el ítem "Gasfitería" → Gasfitería. Los códigos nuevos van al final de cada tabla (se recalculan al cargar).
 - Cantidades no numéricas ("variable", "hacer", "1 grande") no forman parte del catálogo; se ingresan en cada solicitud.
 - Precio unitario y stock mínimo quedan en 0. Se completan después desde la pantalla Materiales o con la primera compra.

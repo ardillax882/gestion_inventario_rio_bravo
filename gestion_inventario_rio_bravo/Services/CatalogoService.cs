@@ -53,7 +53,8 @@ namespace gestion_inventario_rio_bravo.Services
             }
         }
 
-        public static void RegistrarAjuste(Material m, TipoAjuste tipo, decimal cantidad, string motivo)
+        /// <summary>obra = devolución de material sobrante de esa obra (solo entradas); resta del costo de la obra.</summary>
+        public static void RegistrarAjuste(Material m, TipoAjuste tipo, decimal cantidad, string motivo, Obra obra = null)
         {
             if (!Permisos.AjustarInventario)
                 throw new ValidacionException("No tiene permiso para ajustar el inventario.");
@@ -64,10 +65,12 @@ namespace gestion_inventario_rio_bravo.Services
                 throw new ValidacionException("La cantidad debe ser mayor que cero.");
             if (motivo.Length == 0 || motivo.Length > 200)
                 throw new ValidacionException("Ingrese el motivo del ajuste (máximo 200 caracteres).");
+            if (obra != null && tipo != TipoAjuste.AJUSTE_ENTRADA)
+                throw new ValidacionException("La obra solo se indica en devoluciones (entradas).");
 
             try
             {
-                InventarioRepository.RegistrarAjuste(m.IdMaterial, tipo, cantidad, motivo, Sesion.Actual.IdUsuario);
+                InventarioRepository.RegistrarAjuste(m.IdMaterial, tipo, cantidad, motivo, Sesion.Actual.IdUsuario, obra?.IdObra);
             }
             catch (PostgresException ex) when (EsStockInsuficiente(ex))
             {

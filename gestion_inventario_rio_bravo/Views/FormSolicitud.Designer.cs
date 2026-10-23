@@ -61,6 +61,7 @@ namespace gestion_inventario_rio_bravo.Views
             this.btnCerrar = new System.Windows.Forms.Button();
             this.btnImprimir = new System.Windows.Forms.Button();
             this.btnDespachar = new System.Windows.Forms.Button();
+            this.btnMaterialExtra = new System.Windows.Forms.Button();
             this.btnRechazar = new System.Windows.Forms.Button();
             this.btnAprobar = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
@@ -444,6 +445,7 @@ namespace gestion_inventario_rio_bravo.Views
             this.pnlBotones.Controls.Add(this.btnCerrar);
             this.pnlBotones.Controls.Add(this.btnImprimir);
             this.pnlBotones.Controls.Add(this.btnDespachar);
+            this.pnlBotones.Controls.Add(this.btnMaterialExtra);
             this.pnlBotones.Controls.Add(this.btnRechazar);
             this.pnlBotones.Controls.Add(this.btnAprobar);
             this.pnlBotones.Controls.Add(this.btnGuardar);
@@ -478,6 +480,14 @@ namespace gestion_inventario_rio_bravo.Views
             this.btnDespachar.Text = "Nuevo despacho";
             this.btnDespachar.UseVisualStyleBackColor = true;
             this.btnDespachar.Click += new System.EventHandler(this.btnDespachar_Click);
+            //
+            // btnMaterialExtra
+            //
+            this.btnMaterialExtra.Name = "btnMaterialExtra";
+            this.btnMaterialExtra.Size = new System.Drawing.Size(130, 28);
+            this.btnMaterialExtra.Text = "Pedir material extra";
+            this.btnMaterialExtra.UseVisualStyleBackColor = true;
+            this.btnMaterialExtra.Click += new System.EventHandler(this.btnMaterialExtra_Click);
             //
             // btnRechazar
             //
@@ -580,6 +590,7 @@ namespace gestion_inventario_rio_bravo.Views
         private System.Windows.Forms.Button btnCerrar;
         private System.Windows.Forms.Button btnImprimir;
         private System.Windows.Forms.Button btnDespachar;
+        private System.Windows.Forms.Button btnMaterialExtra;
         private System.Windows.Forms.Button btnRechazar;
         private System.Windows.Forms.Button btnAprobar;
         private System.Windows.Forms.Button btnGuardar;

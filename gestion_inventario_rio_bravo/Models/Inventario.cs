@@ -55,12 +55,13 @@ namespace gestion_inventario_rio_bravo.Models
         public string Usuario { get; set; }
         public string Documento { get; set; }
         public string Detalle { get; set; }
+        /// <summary>Ajuste de entrada asociado a una obra = devolución de material sobrante.</summary>
+        public bool DeObra { get; set; }
 
         public string TipoTexto =>
             Tipo == "ENTRADA_COMPRA" ? "Compra"
           : Tipo == "SALIDA_DESPACHO" ? "Despacho a obra"
-          : Tipo == "SALIDA_VENTA" ? "Venta"
-          : Tipo == "AJUSTE_ENTRADA" ? "Ajuste (entrada)"
+          : Tipo == "AJUSTE_ENTRADA" ? (DeObra ? "Devolución de obra" : "Ajuste (entrada)")
           : "Ajuste (salida)";
     }
 }

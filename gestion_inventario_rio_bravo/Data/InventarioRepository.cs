@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using gestion_inventario_rio_bravo.Models;
 using Npgsql;
 
@@ -7,11 +8,11 @@ namespace gestion_inventario_rio_bravo.Data
     /// <summary>Movimientos de inventario (kardex). El stock lo actualiza el trigger de la BD (RN-05).</summary>
     public static class InventarioRepository
     {
-        /// <summary>Ajuste manual (RF-24). El precio se toma del material al momento del ajuste.</summary>
-        public static void RegistrarAjuste(int idMaterial, TipoAjuste tipo, decimal cantidad, string motivo, int idUsuario)
+        /// <summary>Ajuste manual (RF-24). El precio se toma del material al momento del ajuste. idObra = devolución de esa obra.</summary>
+        public static void RegistrarAjuste(int idMaterial, TipoAjuste tipo, decimal cantidad, string motivo, int idUsuario, int? idObra)
         {
-            const string sql = @"INSERT INTO movimiento_inventario (id_material, tipo, cantidad, precio_unitario, fecha_hora, id_usuario, motivo)
-                                 SELECT id_material, @tipo, @cantidad, precio_unitario, @ahora, @usuario, @motivo
+            const string sql = @"INSERT INTO movimiento_inventario (id_material, tipo, cantidad, precio_unitario, fecha_hora, id_usuario, motivo, id_obra)
+                                 SELECT id_material, @tipo, @cantidad, precio_unitario, @ahora, @usuario, @motivo, @obra
                                    FROM material WHERE id_material = @material";
             using (var conn = ConexionBD.ObtenerConexion())
             using (var cmd = new NpgsqlCommand(sql, conn))
@@ -21,6 +22,7 @@ namespace gestion_inventario_rio_bravo.Data
                 cmd.Parameters.AddWithValue("cantidad", cantidad);
                 cmd.Parameters.AddWithValue("usuario", idUsuario);
                 cmd.Parameters.AddWithValue("motivo", motivo);
+                cmd.Parameters.AddWithValue("obra", ConexionBD.Nulo(idObra));
                 ConexionBD.AgregarAhora(cmd, "ahora");
                 cmd.ExecuteNonQuery();
             }
@@ -30,7 +32,7 @@ namespace gestion_inventario_rio_bravo.Data
         public static List<Movimiento> Kardex(int idMaterial)
         {
             const string sql = @"SELECT mv.fecha_hora, mv.tipo, mv.cantidad, mv.precio_unitario, u.nombre,
-                                        mv.id_orden, mv.id_despacho, mv.id_venta, o.nombre_obra, mv.motivo
+                                        mv.id_orden, mv.id_despacho, o.nombre_obra, mv.motivo
                                    FROM movimiento_inventario mv
                                    JOIN usuario u ON u.id_usuario = mv.id_usuario
                                    LEFT JOIN obra o ON o.id_obra = mv.id_obra
@@ -60,9 +62,9 @@ namespace gestion_inventario_rio_bravo.Data
                             Usuario = r.GetString(4),
                             Documento = !r.IsDBNull(6) ? Folio.Despacho(r.GetInt32(6))
                                       : !r.IsDBNull(5) ? "OC-" + r.GetInt32(5).ToString("D6")
-                                      : !r.IsDBNull(7) ? "VEN-" + r.GetInt32(7).ToString("D6")
                                       : "",
-                            Detalle = ConexionBD.Texto(r, 8) ?? ConexionBD.Texto(r, 9)
+                            DeObra = !r.IsDBNull(7),
+                            Detalle = string.Join(" · ", new[] { ConexionBD.Texto(r, 7), ConexionBD.Texto(r, 8) }.Where(t => t != null))
                         });
                     }
             }

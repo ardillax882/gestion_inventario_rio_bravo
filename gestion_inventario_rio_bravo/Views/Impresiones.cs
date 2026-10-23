@@ -230,7 +230,7 @@ namespace gestion_inventario_rio_bravo.Views
 
         protected override string Folio => _s.Folio;
         protected override string Subtitulo => "SALIDA DE MATERIALES";
-        protected override string[] Firmas => new[] { "Entregado por (Bodeguero)", "Recibido por (Maestro)", "Autorizado por" };
+        protected override string[] Firmas => new[] { "Entregado por (Bodeguero)", "Recibido por (Maestro jefe de cuadrilla)", "Autorizado por (Encargado de bodega)" };
 
         protected override Columna[] Columnas
         {

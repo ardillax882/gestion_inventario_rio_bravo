@@ -10,7 +10,9 @@ namespace gestion_inventario_rio_bravo.Data
     public static class SolicitudRepository
     {
         private const string SelectEncabezado = @"
-            SELECT s.id_solicitud, s.id_obra, o.nombre_obra, o.superficie_m2, o.direccion, o.beneficiario, o.maestro, o.estado,
+            SELECT s.id_solicitud, s.id_obra, o.nombre_obra, o.superficie_m2, o.direccion,
+                   NULLIF(CONCAT_WS(' · ', o.beneficiario, 'RUT ' || o.beneficiario_rut, 'Tel. ' || o.beneficiario_telefono), ''),
+                   o.maestro, o.estado,
                    s.id_usuario, u.nombre, s.fecha_solicitud, s.estado, ua.nombre, s.fecha_aprobacion, s.motivo_rechazo,
                    s.equipo_trompo, s.equipo_placa, s.equipo_bano, s.observaciones,
                    COALESCE((SELECT SUM(v.saldo) FROM v_saldo_solicitud v WHERE v.id_solicitud = s.id_solicitud), 0)
